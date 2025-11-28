@@ -39,7 +39,6 @@ export const StorageUtils = {
       if (!jsonString) return null;
 
       const data = JSON.parse(jsonString) as GameSaveData;
-      // Basic validation could be added here
       return data;
     } catch (e) {
       console.error('Failed to load game:', e);
@@ -48,22 +47,36 @@ export const StorageUtils = {
   },
 
   exportSave: (): string => {
-    const compressed = localStorage.getItem(SAVE_KEY);
-    return compressed || '';
+    try {
+      const compressed = localStorage.getItem(SAVE_KEY);
+      return compressed || '';
+    } catch (e) {
+      console.error('Failed to export save:', e);
+      return '';
+    }
   },
 
   importSave: (compressedString: string): boolean => {
     try {
-      const jsonString = LZString.decompressFromEncodedURIComponent(compressedString);
-      if (!jsonString) return false;
-      
-      const data = JSON.parse(jsonString);
-      // Validate essential fields
-      if (typeof data.floor !== 'number' || !data.player) {
+      if (!compressedString || typeof compressedString !== 'string') {
+        console.error('Invalid import string');
         return false;
       }
 
-      localStorage.setItem(SAVE_KEY, compressedString);
+      const jsonString = LZString.decompressFromEncodedURIComponent(compressedString.trim());
+      if (!jsonString) {
+        console.error('Decompression failed');
+        return false;
+      }
+      
+      const data = JSON.parse(jsonString);
+      // Basic validation
+      if (typeof data.floor !== 'number' || !data.player) {
+        console.error('Invalid save data structure');
+        return false;
+      }
+
+      localStorage.setItem(SAVE_KEY, compressedString.trim());
       return true;
     } catch (e) {
       console.error('Failed to import save:', e);

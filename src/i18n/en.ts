@@ -1,8 +1,8 @@
 export const en = {
   common: {
     title: 'Termicrawler',
-    start: 'Initialize Connection (Start)',
-    continue: 'Resume Connection (Continue)',
+    start: 'Initialize Connection',
+    continue: 'Resume Connection',
     language: 'Language',
     loading: 'Loading...',
     error: 'An error occurred',
@@ -19,11 +19,11 @@ export const en = {
     close: 'Close',
   },
   status: {
-    hp: 'Integrity (HP)',
-    atk: 'Attack (ATK)',
-    floor: 'Depth (FLOOR)',
-    level: 'Level (LV)',
-    exp: 'Experience (EXP)',
+    hp: 'Integrity',
+    atk: 'Attack',
+    floor: 'Depth',
+    level: 'Level',
+    exp: 'Experience',
   },
   battle: {
     encounter: 'Hostile program encountered!',

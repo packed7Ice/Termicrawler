@@ -1,9 +1,9 @@
 export const ja = {
   common: {
     title: 'Termicrawler',
-    start: '接続開始 (Start)',
-    continue: '接続再開 (Continue)',
-    language: '言語 (Language)',
+    start: '接続開始',
+    continue: '接続再開',
+    language: '言語',
     loading: '読み込み中...',
     error: 'エラーが発生しました',
     back: '戻る',
@@ -19,11 +19,11 @@ export const ja = {
     close: '閉じる',
   },
   status: {
-    hp: '耐久値 (HP)',
-    atk: '攻撃力 (ATK)',
-    floor: '深度 (FLOOR)',
-    level: 'レベル (LV)',
-    exp: '経験値 (EXP)',
+    hp: '耐久値',
+    atk: '攻撃力',
+    floor: '深度',
+    level: 'レベル',
+    exp: '経験値',
   },
   battle: {
     encounter: '敵性プログラムに遭遇！',
