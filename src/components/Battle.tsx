@@ -13,7 +13,7 @@ interface WordData {
 interface BattleProps {
   battleState: BattleState;
   onBattleUpdate: (newState: BattleState) => void;
-  onBattleEnd: (winner: 'player' | 'enemy') => void;
+  onBattleEnd: (winner: 'player' | 'enemy', finalHp: number) => void;
 }
 
 export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onBattleEnd }) => {
@@ -35,7 +35,7 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
   useEffect(() => {
     if (battleState.isFinished && battleState.winner) {
       setTimeout(() => {
-        onBattleEnd(battleState.winner!);
+        onBattleEnd(battleState.winner!, battleState.player.hp);
       }, 1500);
     } else if (battleState.turn === 'enemy') {
       // Enemy turn delay

@@ -12,6 +12,8 @@ interface StatusPanelProps {
 export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, floor, level, exp }) => {
   const { t } = useI18n();
 
+  const nextLevelExp = Math.floor(50 * Math.pow(1.2, level - 1));
+
   return (
     <div className="terminal-border p-4 w-64">
       <h2 className="text-xl mb-4 border-b border-terminal-green pb-2">STATUS</h2>
@@ -41,7 +43,14 @@ export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, floor, leve
 
         <div className="flex justify-between mt-4">
           <span>{t('status.exp')}</span>
-          <span>{exp}</span>
+          <span>{exp} / {nextLevelExp}</span>
+        </div>
+        {/* EXP Bar */}
+        <div className="w-full h-1 bg-terminal-darkGreen mt-1">
+          <div 
+            className="h-full bg-terminal-yellow transition-all duration-300"
+            style={{ width: `${Math.min(100, (exp / nextLevelExp) * 100)}%` }}
+          />
         </div>
       </div>
     </div>

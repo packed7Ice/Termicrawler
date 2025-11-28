@@ -126,13 +126,48 @@ function App() {
     setGameState('battle');
   };
 
-  const handleBattleEnd = (winner: 'player' | 'enemy') => {
+  const getNextLevelExp = (level: number) => {
+    return Math.floor(50 * Math.pow(1.2, level - 1));
+  };
+
+  const handleBattleEnd = (winner: 'player' | 'enemy', finalHp: number) => {
     if (winner === 'player') {
-      setPlayer(prev => ({
-        ...prev,
-        hp: Math.min(prev.maxHp, prev.hp + 10),
-        exp: prev.exp + 10
-      }));
+      const expGain = 10 + (floor * 2);
+      
+      setPlayer(prev => {
+        let newExp = prev.exp + expGain;
+        let newLevel = prev.level;
+        let newMaxHp = prev.maxHp;
+        let newAtk = prev.atk;
+        let newHp = finalHp; // Use the HP from the end of battle
+        let leveledUp = false;
+
+        let nextLevelExp = getNextLevelExp(newLevel);
+
+        while (newExp >= nextLevelExp) {
+          newExp -= nextLevelExp;
+          newLevel++;
+          newMaxHp += 10;
+          newAtk += 2;
+          leveledUp = true;
+          nextLevelExp = getNextLevelExp(newLevel);
+        }
+
+        if (leveledUp) {
+          newHp = newMaxHp; // Full heal on level up
+        } else {
+          newHp = Math.min(newMaxHp, newHp + 5); // Small heal (5) after battle if not leveling up
+        }
+
+        return {
+          ...prev,
+          hp: newHp,
+          maxHp: newMaxHp,
+          atk: newAtk,
+          level: newLevel,
+          exp: newExp
+        };
+      });
       setGameState('dungeon');
     } else {
       setGameState('gameover');
@@ -194,8 +229,8 @@ function App() {
 
             <div className="w-80 flex flex-col gap-4">
               <StatusPanel 
-                hp={player.hp} 
-                maxHp={player.maxHp} 
+                hp={gameState === 'battle' && battleState ? battleState.player.hp : player.hp} 
+                maxHp={gameState === 'battle' && battleState ? battleState.player.maxHp : player.maxHp} 
                 floor={floor} 
                 level={player.level} 
                 exp={player.exp} 
