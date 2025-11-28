@@ -37,8 +37,15 @@ npm run dev
 npm run build
 ```
 
-### デプロイ (GitHub Pages)
-`npm run build` を実行すると `dist` フォルダに静的ファイルが生成されます。これを GitHub Pages 等のホスティングサービスにデプロイしてください。
+### GitHub Actions による自動デプロイ
+このリポジトリは GitHub Actions を使用して自動的にデプロイされます。
+
+1. **自動ビルド**: `main` ブランチに push されると、自動的に `npm run build` が実行されます。
+2. **デプロイ**: ビルド生成物（`dist/`）の内容が `gh-pages` ブランチに自動的に push されます。
+3. **GitHub Pages 設定**: リポジトリの Settings > Pages で以下のように設定してください。
+   - **Source**: Deploy from a branch
+   - **Branch**: `gh-pages`
+   - **Folder**: `/` (root)
 
 ### 公開前チェックリスト
 - [x] OGP設定済み
@@ -81,6 +88,17 @@ npm run dev
 npm run build
 ```
 
-### Deployment
-Run `npm run build` to generate static files in the `dist` folder. Deploy these files to GitHub Pages or any static hosting service.
+### Automatic deployment via GitHub Actions
+This repository uses GitHub Actions for automatic deployment.
 
+1. **Auto Build**: Pushing to the `main` branch triggers `npm run build`.
+2. **Deploy**: The contents of `dist/` are automatically published to the `gh-pages` branch.
+3. **GitHub Pages Configuration**: Configure GitHub Pages in repository Settings > Pages as follows:
+   - **Source**: Deploy from a branch
+   - **Branch**: `gh-pages`
+   - **Folder**: `/` (root)
+
+---
+
+### License
+MIT License
