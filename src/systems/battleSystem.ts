@@ -8,13 +8,13 @@ export interface Battler {
   maxEn?: number;
   atk: number;
   isPlayer: boolean;
-  weakLetters?: string[]; // Array of characters (e.g., ['A', 'K'])
+  weakLetters?: string[];
   traits?: Record<string, number>;
-  shield?: number; // Added shield property
-  // Player specific stats
+  shield?: number;
   level?: number;
   exp?: number;
   credits?: number;
+  blockedWords?: string[];
 }
 
 export interface LogEntry {

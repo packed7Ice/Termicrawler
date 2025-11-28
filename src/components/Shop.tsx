@@ -68,6 +68,16 @@ export const Shop: React.FC<ShopProps> = ({ credits, onClose, onPurchase }) => {
                 </div>
                 <div className="text-sm opacity-70">Restores 30 EN</div>
               </div>
+
+              <div className="border border-terminal-green p-4 hover:bg-terminal-green/10 cursor-pointer transition-colors"
+                onClick={() => handlePurchase(30, 'action', 'exclude_word')}
+              >
+                <div className="flex justify-between mb-2">
+                  <span className="font-bold text-xl">WORD EXCLUSION</span>
+                  <span>30 CR</span>
+                </div>
+                <div className="text-sm opacity-70">Remove 1 word forever</div>
+              </div>
             </>
           ) : (
             TRAIT_UPGRADES.map(trait => (

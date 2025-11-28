@@ -33,7 +33,7 @@ function App() {
   const [gameState, setGameState] = useState<GameState>('title');
   const [showShop, setShowShop] = useState(false);
   const [showWordFilter, setShowWordFilter] = useState(false);
-  const [excludedWords, setExcludedWords] = useState<string[]>([]);
+  // excludedWords is now part of player state (blockedWords)
   
   // Game Data
   const [floor, setFloor] = useState(1);
@@ -207,9 +207,20 @@ function App() {
   };
 
   const handlePurchase = (cost: number, itemType: string, itemId: string) => {
-    setPlayer(prev => {
-      if ((prev.credits || 0) < cost) return prev; // Not enough credits
+    if ((player.credits || 0) < cost) return;
 
+    // Special handling for word exclusion
+    if (itemType === 'action' && itemId === 'exclude_word') {
+      setPlayer(prev => ({
+        ...prev,
+        credits: (prev.credits || 0) - cost
+      }));
+      setShowShop(false);
+      setShowWordFilter(true);
+      return;
+    }
+
+    setPlayer(prev => {
       const newCredits = (prev.credits || 0) - cost;
       let newHp = prev.hp;
       let newEn = prev.en || 0;
@@ -248,12 +259,7 @@ function App() {
         </div>
         <div className="text-xs opacity-70 text-right mt-1">SYSTEM: ONLINE</div>
         <div className="absolute top-0 right-0 mt-2 mr-2 flex gap-2">
-          <button 
-            onClick={() => setShowWordFilter(true)}
-            className="text-xs border border-terminal-green px-2 py-1 hover:bg-terminal-green hover:text-terminal-black transition-colors"
-          >
-            FILTER
-          </button>
+          {/* Filter button removed - accessed via Shop now */}
         </div>
       </header>
 
@@ -293,7 +299,7 @@ function App() {
                   battleState={battleState} 
                   onBattleUpdate={setBattleState}
                   onBattleEnd={handleBattleEnd}
-                  excludedWords={excludedWords}
+                  excludedWords={player.blockedWords || []}
                 />
               )}
 
@@ -343,8 +349,14 @@ function App() {
 
         {showWordFilter && (
           <WordFilter 
-            excludedWords={excludedWords}
-            onUpdateExcludedWords={setExcludedWords}
+            excludedWords={player.blockedWords || []}
+            onSelectWord={(word) => {
+              setPlayer(prev => ({
+                ...prev,
+                blockedWords: [...(prev.blockedWords || []), word]
+              }));
+              setShowWordFilter(false);
+            }}
             onClose={() => setShowWordFilter(false)}
           />
         )}

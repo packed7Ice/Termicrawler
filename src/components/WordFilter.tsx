@@ -3,18 +3,21 @@ import wordsData from '../data/words.json';
 
 interface WordFilterProps {
   excludedWords: string[];
-  onUpdateExcludedWords: (words: string[]) => void;
+  onSelectWord: (word: string) => void;
   onClose: () => void;
 }
 
-export const WordFilter: React.FC<WordFilterProps> = ({ excludedWords, onUpdateExcludedWords, onClose }) => {
+export const WordFilter: React.FC<WordFilterProps> = ({ excludedWords, onSelectWord, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const toggleWord = (word: string) => {
-    if (excludedWords.includes(word)) {
-      onUpdateExcludedWords(excludedWords.filter(w => w !== word));
-    } else {
-      onUpdateExcludedWords([...excludedWords, word]);
+  const handleWordClick = (word: string) => {
+    if (excludedWords.includes(word)) return; // Already excluded
+    
+    // Confirm selection? For now, just select immediately as per prompt flow
+    // Or maybe we should ask for confirmation. 
+    // Given the UI is "Select a word to exclude", direct action is probably expected.
+    if (window.confirm(`Exclude "${word}"? This cannot be undone.`)) {
+      onSelectWord(word);
     }
   };
 
@@ -25,10 +28,10 @@ export const WordFilter: React.FC<WordFilterProps> = ({ excludedWords, onUpdateE
   );
 
   return (
-    <div className="absolute inset-0 bg-terminal-black z-30 flex flex-col p-8">
+    <div className="absolute inset-0 bg-terminal-black z-50 flex flex-col p-8">
       <div className="flex justify-between items-center border-b border-terminal-green pb-4 mb-8">
-        <h2 className="text-4xl font-bold">WORD FILTER CONFIG</h2>
-        <button onClick={onClose} className="text-2xl hover:text-terminal-green/70">X</button>
+        <h2 className="text-4xl font-bold">SELECT WORD TO EXCLUDE</h2>
+        <button onClick={onClose} className="text-2xl hover:text-terminal-green/70">CANCEL</button>
       </div>
 
       <div className="mb-4">
@@ -47,11 +50,11 @@ export const WordFilter: React.FC<WordFilterProps> = ({ excludedWords, onUpdateE
           return (
             <div 
               key={word.target}
-              onClick={() => toggleWord(word.target)}
-              className={`p-2 border cursor-pointer transition-colors ${
+              onClick={() => handleWordClick(word.target)}
+              className={`p-2 border transition-colors ${
                 isExcluded 
-                  ? 'border-terminal-red text-terminal-red bg-terminal-red/10' 
-                  : 'border-terminal-darkGreen hover:bg-terminal-darkGreen/20'
+                  ? 'border-terminal-red text-terminal-red bg-terminal-red/10 cursor-not-allowed opacity-50' 
+                  : 'border-terminal-green hover:bg-terminal-green/20 cursor-pointer'
               }`}
             >
               <div className="font-bold">{word.target}</div>
