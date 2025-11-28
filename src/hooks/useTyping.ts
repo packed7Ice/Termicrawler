@@ -21,8 +21,9 @@ export const useTyping = ({ targetWord, onComplete, onMistake, enabled = true }:
         
         if (targetWord) {
           const nextCharIndex = input.length;
-          if (targetWord[nextCharIndex] === char) {
-            const newInput = input + char;
+          // Case insensitive comparison
+          if (targetWord[nextCharIndex].toUpperCase() === char.toUpperCase()) {
+            const newInput = input + targetWord[nextCharIndex]; // Use target casing for consistency
             setInput(newInput);
             setIsError(false);
             

@@ -9,6 +9,9 @@ interface WordData {
   target: string;
   ja: string;
   en: string;
+  full?: string;
+  desc_ja?: string;
+  desc_en?: string;
 }
 
 interface BattleProps {
@@ -52,14 +55,7 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
     }
   }, [battleState, onBattleEnd, onBattleUpdate]);
 
-  const handleTypingComplete = () => {
-    if (battleState.turn !== 'player' || !currentWord) return;
 
-    // Execute attack with the word (BattleSystem handles damage calc and traits)
-    const nextState = BattleSystem.executePlayerAttack(battleState, currentWord.target);
-    onBattleUpdate(nextState);
-    setCurrentWord(getNextWord());
-  };
 
   const handleSkillUse = (skillId: string) => {
     const skill = SKILLS.find(s => s.id === skillId);
@@ -106,12 +102,36 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
         <div className="flex flex-col items-center relative">
           {currentWord && !showSkills && (
             <>
-              <div className="text-terminal-green opacity-70 mb-1 text-lg">
-                {language === 'ja' ? currentWord.ja : currentWord.en}
+              <div className="text-terminal-green opacity-70 mb-1 text-lg flex flex-col items-center">
+                {(() => {
+                  const typingTarget = currentWord.full || currentWord.target;
+                  const isAbbreviation = currentWord.full && currentWord.full.toUpperCase() !== currentWord.target;
+                  
+                  return (
+                    <>
+                      <div className="text-2xl font-bold mb-1">{typingTarget}</div>
+                      {isAbbreviation && <div className="text-sm opacity-80 mb-1">({currentWord.target})</div>}
+                      <div className="text-sm">
+                        {language === 'ja' ? currentWord.ja : currentWord.en}
+                      </div>
+                      {(currentWord.desc_ja || currentWord.desc_en) && (
+                        <div className="text-xs opacity-60 mt-1 max-w-md text-center">
+                          {language === 'ja' ? currentWord.desc_ja : currentWord.desc_en}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
               <TypingInput 
-                targetWord={currentWord.target}
-                onComplete={handleTypingComplete}
+                targetWord={currentWord.full || currentWord.target}
+                onComplete={() => {
+                   if (battleState.turn !== 'player' || !currentWord) return;
+                   const target = currentWord.full || currentWord.target;
+                   const nextState = BattleSystem.executePlayerAttack(battleState, target);
+                   onBattleUpdate(nextState);
+                   setCurrentWord(getNextWord());
+                }}
               />
               
               <button 

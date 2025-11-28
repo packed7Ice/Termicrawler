@@ -31,8 +31,17 @@ export const Dungeon: React.FC<DungeonProps> = ({ map, playerPos }) => {
         ctx.fillStyle = '#003300'; // Dark green for floor
         if (cell === 'start') ctx.fillStyle = '#005500';
         if (cell === 'exit') ctx.fillStyle = '#007700';
+        if (cell === 'shop') ctx.fillStyle = '#aaaa00'; // Yellowish for shop
 
         ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+
+        if (cell === 'shop') {
+          ctx.fillStyle = '#ffff00';
+          ctx.font = '14px monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('S', x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2);
+        }
       });
     });
 

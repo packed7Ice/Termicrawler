@@ -19,7 +19,7 @@ export const StorageUtils = {
       const jsonString = JSON.stringify(data);
       const compressed = LZString.compressToEncodedURIComponent(jsonString);
       localStorage.setItem(SAVE_KEY, compressed);
-      console.log('Game saved successfully.');
+      // console.log('Game saved successfully.');
     } catch (e) {
       console.error('Failed to save game:', e);
     }

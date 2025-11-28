@@ -1,242 +1,2162 @@
 [
-  { "target": "KERNEL", "ja": "カーネル", "en": "Kernel", "category": "OS" },
-  { "target": "THREAD", "ja": "スレッド", "en": "Thread", "category": "OS" },
-  { "target": "PROCESS", "ja": "プロセス", "en": "Process", "category": "OS" },
-  { "target": "MEMORY", "ja": "メモリ", "en": "Memory", "category": "Hardware" },
-  { "target": "BUFFER", "ja": "バッファ", "en": "Buffer", "category": "Programming" },
-  { "target": "CACHE", "ja": "キャッシュ", "en": "Cache", "category": "Hardware" },
-  { "target": "DRIVER", "ja": "ドライバ", "en": "Driver", "category": "OS" },
-  { "target": "SOCKET", "ja": "ソケット", "en": "Socket", "category": "Network" },
-  { "target": "PACKET", "ja": "パケット", "en": "Packet", "category": "Network" },
-  { "target": "ROUTER", "ja": "ルーター", "en": "Router", "category": "Network" },
-  { "target": "SWITCH", "ja": "スイッチ", "en": "Switch", "category": "Network" },
-  { "target": "SERVER", "ja": "サーバー", "en": "Server", "category": "Network" },
-  { "target": "CLIENT", "ja": "クライアント", "en": "Client", "category": "Network" },
-  { "target": "PROXY", "ja": "プロキシ", "en": "Proxy", "category": "Network" },
-  { "target": "DOMAIN", "ja": "ドメイン", "en": "Domain", "category": "Network" },
-  { "target": "SCRIPT", "ja": "スクリプト", "en": "Script", "category": "Programming" },
-  { "target": "BINARY", "ja": "バイナリ", "en": "Binary", "category": "Programming" },
-  { "target": "SOURCE", "ja": "ソース", "en": "Source", "category": "Programming" },
-  { "target": "OBJECT", "ja": "オブジェクト", "en": "Object", "category": "Programming" },
-  { "target": "CLASS", "ja": "クラス", "en": "Class", "category": "Programming" },
-  { "target": "METHOD", "ja": "メソッド", "en": "Method", "category": "Programming" },
-  { "target": "ARRAY", "ja": "配列", "en": "Array", "category": "Programming" },
-  { "target": "STACK", "ja": "スタック", "en": "Stack", "category": "Data Structure" },
-  { "target": "QUEUE", "ja": "キュー", "en": "Queue", "category": "Data Structure" },
-  { "target": "HEAP", "ja": "ヒープ", "en": "Heap", "category": "Data Structure" },
-  { "target": "GRAPH", "ja": "グラフ", "en": "Graph", "category": "Data Structure" },
-  { "target": "TREE", "ja": "木構造", "en": "Tree", "category": "Data Structure" },
-  { "target": "NODE", "ja": "ノード", "en": "Node", "category": "Data Structure" },
-  { "target": "EDGE", "ja": "エッジ", "en": "Edge", "category": "Data Structure" },
-  { "target": "HASH", "ja": "ハッシュ", "en": "Hash", "category": "Security" },
-  { "target": "TOKEN", "ja": "トークン", "en": "Token", "category": "Security" },
-  { "target": "LOGIN", "ja": "ログイン", "en": "Login", "category": "Security" },
-  { "target": "ADMIN", "ja": "管理者", "en": "Admin", "category": "Security" },
-  { "target": "USER", "ja": "ユーザー", "en": "User", "category": "Security" },
-  { "target": "GROUP", "ja": "グループ", "en": "Group", "category": "Security" },
-  { "target": "ROLE", "ja": "ロール", "en": "Role", "category": "Security" },
-  { "target": "POLICY", "ja": "ポリシー", "en": "Policy", "category": "Security" },
-  { "target": "ACCESS", "ja": "アクセス", "en": "Access", "category": "Security" },
-  { "target": "DENY", "ja": "拒否", "en": "Deny", "category": "Security" },
-  { "target": "ALLOW", "ja": "許可", "en": "Allow", "category": "Security" },
-  { "target": "DEBUG", "ja": "デバッグ", "en": "Debug", "category": "Dev" },
-  { "target": "BUILD", "ja": "ビルド", "en": "Build", "category": "Dev" },
-  { "target": "DEPLOY", "ja": "デプロイ", "en": "Deploy", "category": "Dev" },
-  { "target": "MERGE", "ja": "マージ", "en": "Merge", "category": "Dev" },
-  { "target": "COMMIT", "ja": "コミット", "en": "Commit", "category": "Dev" },
-  { "target": "PUSH", "ja": "プッシュ", "en": "Push", "category": "Dev" },
-  { "target": "PULL", "ja": "プル", "en": "Pull", "category": "Dev" },
-  { "target": "FETCH", "ja": "フェッチ", "en": "Fetch", "category": "Dev" },
-  { "target": "CLONE", "ja": "クローン", "en": "Clone", "category": "Dev" },
-  { "target": "FORK", "ja": "フォーク", "en": "Fork", "category": "Dev" },
-  { "target": "BRANCH", "ja": "ブランチ", "en": "Branch", "category": "Dev" },
-  { "target": "TAG", "ja": "タグ", "en": "Tag", "category": "Dev" },
-  { "target": "HEAD", "ja": "ヘッド", "en": "Head", "category": "Dev" },
-  { "target": "MAIN", "ja": "メイン", "en": "Main", "category": "Dev" },
-  { "target": "ORIGIN", "ja": "オリジン", "en": "Origin", "category": "Dev" },
-  { "target": "REMOTE", "ja": "リモート", "en": "Remote", "category": "Dev" },
-  { "target": "LOCAL", "ja": "ローカル", "en": "Local", "category": "Dev" },
-  { "target": "STASH", "ja": "スタッシュ", "en": "Stash", "category": "Dev" },
-  { "target": "REBASE", "ja": "リベース", "en": "Rebase", "category": "Dev" },
-  { "target": "RESET", "ja": "リセット", "en": "Reset", "category": "Dev" },
-  { "target": "REVERT", "ja": "リバート", "en": "Revert", "category": "Dev" },
-  { "target": "DIFF", "ja": "差分", "en": "Diff", "category": "Dev" },
-  { "target": "PATCH", "ja": "パッチ", "en": "Patch", "category": "Dev" },
-  { "target": "ISSUE", "ja": "課題", "en": "Issue", "category": "Dev" },
-  { "target": "BUG", "ja": "バグ", "en": "Bug", "category": "Dev" },
-  { "target": "FIX", "ja": "修正", "en": "Fix", "category": "Dev" },
-  { "target": "TEST", "ja": "テスト", "en": "Test", "category": "Dev" },
-  { "target": "UNIT", "ja": "ユニット", "en": "Unit", "category": "Dev" },
-  { "target": "MOCK", "ja": "モック", "en": "Mock", "category": "Dev" },
-  { "target": "STUB", "ja": "スタブ", "en": "Stub", "category": "Dev" },
-  { "target": "SPY", "ja": "スパイ", "en": "Spy", "category": "Dev" },
-  { "target": "SUITE", "ja": "スイート", "en": "Suite", "category": "Dev" },
-  { "target": "COVER", "ja": "カバレッジ", "en": "Coverage", "category": "Dev" },
-  { "target": "LINT", "ja": "リント", "en": "Lint", "category": "Dev" },
-  { "target": "FORMAT", "ja": "フォーマット", "en": "Format", "category": "Dev" },
-  { "target": "STYLE", "ja": "スタイル", "en": "Style", "category": "Dev" },
-  { "target": "DOCS", "ja": "ドキュメント", "en": "Docs", "category": "Dev" },
-  { "target": "WIKI", "ja": "ウィキ", "en": "Wiki", "category": "Dev" },
-  { "target": "README", "ja": "リードミー", "en": "Readme", "category": "Dev" },
-  { "target": "TODO", "ja": "ToDo", "en": "Todo", "category": "Dev" },
-  { "target": "NOTE", "ja": "ノート", "en": "Note", "category": "Dev" },
-  { "target": "WARN", "ja": "警告", "en": "Warn", "category": "Dev" },
-  { "target": "ERROR", "ja": "エラー", "en": "Error", "category": "Dev" },
-  { "target": "FATAL", "ja": "致命的", "en": "Fatal", "category": "Dev" },
-  { "target": "INFO", "ja": "情報", "en": "Info", "category": "Dev" },
-  { "target": "TRACE", "ja": "トレース", "en": "Trace", "category": "Dev" },
-  { "target": "PRINT", "ja": "出力", "en": "Print", "category": "Dev" },
-  { "target": "ECHO", "ja": "エコー", "en": "Echo", "category": "Dev" },
-  { "target": "READ", "ja": "読み込み", "en": "Read", "category": "IO" },
-  { "target": "WRITE", "ja": "書き込み", "en": "Write", "category": "IO" },
-  { "target": "OPEN", "ja": "開く", "en": "Open", "category": "IO" },
-  { "target": "CLOSE", "ja": "閉じる", "en": "Close", "category": "IO" },
-  { "target": "FILE", "ja": "ファイル", "en": "File", "category": "IO" },
-  { "target": "DIR", "ja": "ディレクトリ", "en": "Directory", "category": "IO" },
-  { "target": "PATH", "ja": "パス", "en": "Path", "category": "IO" },
-  { "target": "ROOT", "ja": "ルート", "en": "Root", "category": "IO" },
-  { "target": "HOME", "ja": "ホーム", "en": "Home", "category": "IO" },
-  { "target": "TEMP", "ja": "一時", "en": "Temp", "category": "IO" },
-  { "target": "LOG", "ja": "ログ", "en": "Log", "category": "IO" },
-  { "target": "DATA", "ja": "データ", "en": "Data", "category": "IO" },
-  { "target": "TEXT", "ja": "テキスト", "en": "Text", "category": "IO" },
-  { "target": "JSON", "ja": "JSON", "en": "JSON", "category": "Format" },
-  { "target": "XML", "ja": "XML", "en": "XML", "category": "Format" },
-  { "target": "YAML", "ja": "YAML", "en": "YAML", "category": "Format" },
-  { "target": "HTML", "ja": "HTML", "en": "HTML", "category": "Format" },
-  { "target": "CSS", "ja": "CSS", "en": "CSS", "category": "Format" },
-  { "target": "SQL", "ja": "SQL", "en": "SQL", "category": "Format" },
-  { "target": "CSV", "ja": "CSV", "en": "CSV", "category": "Format" },
-  { "target": "PDF", "ja": "PDF", "en": "PDF", "category": "Format" },
-  { "target": "ZIP", "ja": "ZIP", "en": "ZIP", "category": "Format" },
-  { "target": "TAR", "ja": "TAR", "en": "TAR", "category": "Format" },
-  { "target": "GZIP", "ja": "GZIP", "en": "GZIP", "category": "Format" },
-  { "target": "JPEG", "ja": "JPEG", "en": "JPEG", "category": "Format" },
-  { "target": "PNG", "ja": "PNG", "en": "PNG", "category": "Format" },
-  { "target": "GIF", "ja": "GIF", "en": "GIF", "category": "Format" },
-  { "target": "SVG", "ja": "SVG", "en": "SVG", "category": "Format" },
-  { "target": "MP3", "ja": "MP3", "en": "MP3", "category": "Format" },
-  { "target": "MP4", "ja": "MP4", "en": "MP4", "category": "Format" },
-  { "target": "WAV", "ja": "WAV", "en": "WAV", "category": "Format" },
-  { "target": "AVI", "ja": "AVI", "en": "AVI", "category": "Format" },
-  { "target": "MOV", "ja": "MOV", "en": "MOV", "category": "Format" },
-  { "target": "WEB", "ja": "ウェブ", "en": "Web", "category": "Web" },
-  { "target": "NET", "ja": "ネット", "en": "Net", "category": "Web" },
-  { "target": "COM", "ja": "コム", "en": "Com", "category": "Web" },
-  { "target": "ORG", "ja": "オーグ", "en": "Org", "category": "Web" },
-  { "target": "EDU", "ja": "エデュ", "en": "Edu", "category": "Web" },
-  { "target": "GOV", "ja": "ガブ", "en": "Gov", "category": "Web" },
-  { "target": "MIL", "ja": "ミル", "en": "Mil", "category": "Web" },
-  { "target": "INT", "ja": "イント", "en": "Int", "category": "Web" },
-  { "target": "IO", "ja": "アイオー", "en": "IO", "category": "Web" },
-  { "target": "AI", "ja": "AI", "en": "AI", "category": "Tech" },
-  { "target": "ML", "ja": "機械学習", "en": "ML", "category": "Tech" },
-  { "target": "DL", "ja": "深層学習", "en": "DL", "category": "Tech" },
-  { "target": "NN", "ja": "ニューラルネット", "en": "NN", "category": "Tech" },
-  { "target": "VR", "ja": "VR", "en": "VR", "category": "Tech" },
-  { "target": "AR", "ja": "AR", "en": "AR", "category": "Tech" },
-  { "target": "MR", "ja": "MR", "en": "MR", "category": "Tech" },
-  { "target": "XR", "ja": "XR", "en": "XR", "category": "Tech" },
-  { "target": "IOT", "ja": "IoT", "en": "IoT", "category": "Tech" },
-  { "target": "NFT", "ja": "NFT", "en": "NFT", "category": "Tech" },
-  { "target": "DAO", "ja": "DAO", "en": "DAO", "category": "Tech" },
-  { "target": "DEFI", "ja": "DeFi", "en": "DeFi", "category": "Tech" },
-  { "target": "DAPP", "ja": "DApp", "en": "DApp", "category": "Tech" },
-  { "target": "WEB3", "ja": "Web3", "en": "Web3", "category": "Tech" },
-  { "target": "META", "ja": "メタ", "en": "Meta", "category": "Tech" },
-  { "target": "BETA", "ja": "ベータ", "en": "Beta", "category": "Tech" },
-  { "target": "ALPHA", "ja": "アルファ", "en": "Alpha", "category": "Tech" },
-  { "target": "DEMO", "ja": "デモ", "en": "Demo", "category": "Tech" },
-  { "target": "PRO", "ja": "プロ", "en": "Pro", "category": "Tech" },
-  { "target": "LITE", "ja": "ライト", "en": "Lite", "category": "Tech" },
-  { "target": "PLUS", "ja": "プラス", "en": "Plus", "category": "Tech" },
-  { "target": "MAX", "ja": "マックス", "en": "Max", "category": "Tech" },
-  { "target": "MIN", "ja": "ミニ", "en": "Min", "category": "Tech" },
-  { "target": "AVG", "ja": "平均", "en": "Avg", "category": "Tech" },
-  { "target": "SUM", "ja": "合計", "en": "Sum", "category": "Tech" },
-  { "target": "COUNT", "ja": "カウント", "en": "Count", "category": "Tech" },
-  { "target": "LEN", "ja": "長さ", "en": "Len", "category": "Tech" },
-  { "target": "SIZE", "ja": "サイズ", "en": "Size", "category": "Tech" },
-  { "target": "TYPE", "ja": "型", "en": "Type", "category": "Tech" },
-  { "target": "VOID", "ja": "ボイド", "en": "Void", "category": "Tech" },
-  { "target": "NULL", "ja": "ヌル", "en": "Null", "category": "Tech" },
-  { "target": "NAN", "ja": "非数", "en": "NaN", "category": "Tech" },
-  { "target": "TRUE", "ja": "真", "en": "True", "category": "Tech" },
-  { "target": "FALSE", "ja": "偽", "en": "False", "category": "Tech" },
-  { "target": "IF", "ja": "もし", "en": "If", "category": "Tech" },
-  { "target": "ELSE", "ja": "そうでなければ", "en": "Else", "category": "Tech" },
-  { "target": "FOR", "ja": "繰り返し", "en": "For", "category": "Tech" },
-  { "target": "WHILE", "ja": "間", "en": "While", "category": "Tech" },
-  { "target": "DO", "ja": "実行", "en": "Do", "category": "Tech" },
-  { "target": "SWITCH", "ja": "分岐", "en": "Switch", "category": "Tech" },
-  { "target": "CASE", "ja": "場合", "en": "Case", "category": "Tech" },
-  { "target": "BREAK", "ja": "中断", "en": "Break", "category": "Tech" },
-  { "target": "NEXT", "ja": "次", "en": "Next", "category": "Tech" },
-  { "target": "GOTO", "ja": "移動", "en": "Goto", "category": "Tech" },
-  { "target": "EXIT", "ja": "終了", "en": "Exit", "category": "Tech" },
-  { "target": "TRY", "ja": "試行", "en": "Try", "category": "Tech" },
-  { "target": "CATCH", "ja": "捕捉", "en": "Catch", "category": "Tech" },
-  { "target": "THROW", "ja": "投げる", "en": "Throw", "category": "Tech" },
-  { "target": "FINAL", "ja": "最終", "en": "Final", "category": "Tech" },
-  { "target": "CONST", "ja": "定数", "en": "Const", "category": "Tech" },
-  { "target": "VAR", "ja": "変数", "en": "Var", "category": "Tech" },
-  { "target": "LET", "ja": "させる", "en": "Let", "category": "Tech" },
-  { "target": "FUNC", "ja": "関数", "en": "Func", "category": "Tech" },
-  { "target": "DEF", "ja": "定義", "en": "Def", "category": "Tech" },
-  { "target": "RET", "ja": "戻る", "en": "Ret", "category": "Tech" },
-  { "target": "IMP", "ja": "インポート", "en": "Imp", "category": "Tech" },
-  { "target": "EXP", "ja": "エクスポート", "en": "Exp", "category": "Tech" },
-  { "target": "PKG", "ja": "パッケージ", "en": "Pkg", "category": "Tech" },
-  { "target": "LIB", "ja": "ライブラリ", "en": "Lib", "category": "Tech" },
-  { "target": "BIN", "ja": "ビン", "en": "Bin", "category": "Tech" },
-  { "target": "SRC", "ja": "ソース", "en": "Src", "category": "Tech" },
-  { "target": "OBJ", "ja": "オブジェクト", "en": "Obj", "category": "Tech" },
-  { "target": "DOC", "ja": "ドキュメント", "en": "Doc", "category": "Tech" },
-  { "target": "IMG", "ja": "画像", "en": "Img", "category": "Tech" },
-  { "target": "AUD", "ja": "音声", "en": "Aud", "category": "Tech" },
-  { "target": "VID", "ja": "動画", "en": "Vid", "category": "Tech" },
-  { "target": "DB", "ja": "データベース", "en": "DB", "category": "Tech" },
-  { "target": "API", "ja": "API", "en": "API", "category": "Tech" },
-  { "target": "SDK", "ja": "SDK", "en": "SDK", "category": "Tech" },
-  { "target": "CLI", "ja": "CLI", "en": "CLI", "category": "Tech" },
-  { "target": "GUI", "ja": "GUI", "en": "GUI", "category": "Tech" },
-  { "target": "UI", "ja": "UI", "en": "UI", "category": "Tech" },
-  { "target": "UX", "ja": "UX", "en": "UX", "category": "Tech" },
-  { "target": "DX", "ja": "DX", "en": "DX", "category": "Tech" },
-  { "target": "QA", "ja": "QA", "en": "QA", "category": "Tech" },
-  { "target": "PM", "ja": "PM", "en": "PM", "category": "Tech" },
-  { "target": "PO", "ja": "PO", "en": "PO", "category": "Tech" },
-  { "target": "CTO", "ja": "CTO", "en": "CTO", "category": "Tech" },
-  { "target": "CEO", "ja": "CEO", "en": "CEO", "category": "Tech" },
-  { "target": "CFO", "ja": "CFO", "en": "CFO", "category": "Tech" },
-  { "target": "COO", "ja": "COO", "en": "COO", "category": "Tech" },
-  { "target": "HR", "ja": "人事", "en": "HR", "category": "Tech" },
-  { "target": "PR", "ja": "広報", "en": "PR", "category": "Tech" },
-  { "target": "IT", "ja": "IT", "en": "IT", "category": "Tech" },
-  { "target": "ICT", "ja": "ICT", "en": "ICT", "category": "Tech" },
-  { "target": "IS", "ja": "情報システム", "en": "IS", "category": "Tech" },
-  { "target": "CS", "ja": "計算機科学", "en": "CS", "category": "Tech" },
-  { "target": "SE", "ja": "SE", "en": "SE", "category": "Tech" },
-  { "target": "PG", "ja": "PG", "en": "PG", "category": "Tech" },
-  { "target": "PM", "ja": "PM", "en": "PM", "category": "Tech" },
-  { "target": "PL", "ja": "PL", "en": "PL", "category": "Tech" },
-  { "target": "TL", "ja": "TL", "en": "TL", "category": "Tech" },
-  { "target": "SL", "ja": "SL", "en": "SL", "category": "Tech" },
-  { "target": "GL", "ja": "GL", "en": "GL", "category": "Tech" },
-  { "target": "MG", "ja": "MG", "en": "MG", "category": "Tech" },
-  { "target": "GM", "ja": "GM", "en": "GM", "category": "Tech" },
-  { "target": "VP", "ja": "VP", "en": "VP", "category": "Tech" },
-  { "target": "MD", "ja": "MD", "en": "MD", "category": "Tech" },
-  { "target": "ED", "ja": "ED", "en": "ED", "category": "Tech" },
-  { "target": "CD", "ja": "CD", "en": "CD", "category": "Tech" },
-  { "target": "AD", "ja": "AD", "en": "AD", "category": "Tech" },
-  { "target": "BD", "ja": "BD", "en": "BD", "category": "Tech" },
-  { "target": "SD", "ja": "SD", "en": "SD", "category": "Tech" },
-  { "target": "TD", "ja": "TD", "en": "TD", "category": "Tech" },
-  { "target": "UD", "ja": "UD", "en": "UD", "category": "Tech" },
-  { "target": "VD", "ja": "VD", "en": "VD", "category": "Tech" },
-  { "target": "WD", "ja": "WD", "en": "WD", "category": "Tech" },
-  { "target": "XD", "ja": "XD", "en": "XD", "category": "Tech" },
-  { "target": "YD", "ja": "YD", "en": "YD", "category": "Tech" },
-  { "target": "ZD", "ja": "ZD", "en": "ZD", "category": "Tech" }
+  { 
+    "target": "KERNEL", 
+    "ja": "カーネル", 
+    "en": "Kernel", 
+    "category": "OS",
+    "full": "Kernel",
+    "desc_ja": "OSの中核となる部分。ハードウェアとソフトウェアの架け橋。",
+    "desc_en": "The core part of an OS. Bridges hardware and software."
+  },
+  { 
+    "target": "THREAD", 
+    "ja": "スレッド", 
+    "en": "Thread", 
+    "category": "OS",
+    "full": "Thread",
+    "desc_ja": "プロセス内で実行される処理の最小単位。",
+    "desc_en": "The smallest unit of processing within a process."
+  },
+  { 
+    "target": "PROCESS", 
+    "ja": "プロセス", 
+    "en": "Process", 
+    "category": "OS",
+    "full": "Process",
+    "desc_ja": "実行中のプログラムのインスタンス。",
+    "desc_en": "An instance of a running program."
+  },
+  { 
+    "target": "MEMORY", 
+    "ja": "メモリ", 
+    "en": "Memory", 
+    "category": "Hardware",
+    "full": "Random Access Memory",
+    "desc_ja": "データやプログラムを一時的に記憶する場所。",
+    "desc_en": "Temporary storage for data and programs."
+  },
+  { 
+    "target": "BUFFER", 
+    "ja": "バッファ", 
+    "en": "Buffer", 
+    "category": "Programming",
+    "full": "Buffer",
+    "desc_ja": "データを一時的に保持するメモリ領域。",
+    "desc_en": "Memory area to temporarily hold data."
+  },
+  { 
+    "target": "CACHE", 
+    "ja": "キャッシュ", 
+    "en": "Cache", 
+    "category": "Hardware",
+    "full": "Cache Memory",
+    "desc_ja": "高速なデータアクセスのためにデータを一時保存する場所。",
+    "desc_en": "Temporary storage for fast data access."
+  },
+  { 
+    "target": "DRIVER", 
+    "ja": "ドライバ", 
+    "en": "Driver", 
+    "category": "OS",
+    "full": "Device Driver",
+    "desc_ja": "ハードウェアを制御するためのソフトウェア。",
+    "desc_en": "Software that controls hardware."
+  },
+  { 
+    "target": "SOCKET", 
+    "ja": "ソケット", 
+    "en": "Socket", 
+    "category": "Network",
+    "full": "Network Socket",
+    "desc_ja": "ネットワーク通信の終端点。",
+    "desc_en": "An endpoint for network communication."
+  },
+  { 
+    "target": "PACKET", 
+    "ja": "パケット", 
+    "en": "Packet", 
+    "category": "Network",
+    "full": "Network Packet",
+    "desc_ja": "ネットワーク上を流れるデータの小包。",
+    "desc_en": "A small package of data flowing over a network."
+  },
+  { 
+    "target": "ROUTER", 
+    "ja": "ルーター", 
+    "en": "Router", 
+    "category": "Network",
+    "full": "Router",
+    "desc_ja": "異なるネットワーク同士を接続する機器。",
+    "desc_en": "A device that connects different networks."
+  },
+  { 
+    "target": "SWITCH", 
+    "ja": "スイッチ", 
+    "en": "Switch", 
+    "category": "Network",
+    "full": "Network Switch",
+    "desc_ja": "ネットワーク内の機器同士を接続する機器。",
+    "desc_en": "A device that connects devices within a network."
+  },
+  { 
+    "target": "SERVER", 
+    "ja": "サーバー", 
+    "en": "Server", 
+    "category": "Network",
+    "full": "Server",
+    "desc_ja": "サービスを提供するコンピュータ。",
+    "desc_en": "A computer that provides services."
+  },
+  { 
+    "target": "CLIENT", 
+    "ja": "クライアント", 
+    "en": "Client", 
+    "category": "Network",
+    "full": "Client",
+    "desc_ja": "サービスを利用するコンピュータ。",
+    "desc_en": "A computer that uses services."
+  },
+  { 
+    "target": "PROXY", 
+    "ja": "プロキシ", 
+    "en": "Proxy", 
+    "category": "Network",
+    "full": "Proxy Server",
+    "desc_ja": "内部と外部の通信を中継するサーバー。",
+    "desc_en": "A server that relays communication between internal and external networks."
+  },
+  { 
+    "target": "DOMAIN", 
+    "ja": "ドメイン", 
+    "en": "Domain", 
+    "category": "Network",
+    "full": "Domain Name",
+    "desc_ja": "インターネット上の住所のようなもの。",
+    "desc_en": "Like an address on the internet."
+  },
+  { 
+    "target": "SCRIPT", 
+    "ja": "スクリプト", 
+    "en": "Script", 
+    "category": "Programming",
+    "full": "Script",
+    "desc_ja": "簡易的なプログラム。",
+    "desc_en": "A simple program."
+  },
+  { 
+    "target": "BINARY", 
+    "ja": "バイナリ", 
+    "en": "Binary", 
+    "category": "Programming",
+    "full": "Binary Code",
+    "desc_ja": "0と1で表現された機械語データ。",
+    "desc_en": "Machine code data expressed in 0s and 1s."
+  },
+  { 
+    "target": "SOURCE", 
+    "ja": "ソース", 
+    "en": "Source", 
+    "category": "Programming",
+    "full": "Source Code",
+    "desc_ja": "人間が読める形式のプログラム。",
+    "desc_en": "Human-readable program code."
+  },
+  { 
+    "target": "OBJECT", 
+    "ja": "オブジェクト", 
+    "en": "Object", 
+    "category": "Programming",
+    "full": "Object",
+    "desc_ja": "データと手続きをまとめたもの。",
+    "desc_en": "A combination of data and procedures."
+  },
+  {
+    "target": "CLASS",
+    "ja": "クラス",
+    "en": "Class",
+    "category": "Programming",
+    "full": "Class",
+    "desc_ja": "オブジェクトの設計図。",
+    "desc_en": "A blueprint for creating objects."
+  },
+  {
+    "target": "METHOD",
+    "ja": "メソッド",
+    "en": "Method",
+    "category": "Programming",
+    "full": "Method",
+    "desc_ja": "クラス内で定義された関数。",
+    "desc_en": "A function defined within a class."
+  },
+  {
+    "target": "ARRAY",
+    "ja": "配列",
+    "en": "Array",
+    "category": "Programming",
+    "full": "Array",
+    "desc_ja": "同じ型のデータを並べたもの。",
+    "desc_en": "A collection of elements of the same type."
+  },
+  {
+    "target": "STACK",
+    "ja": "スタック",
+    "en": "Stack",
+    "category": "Data Structure",
+    "full": "Stack",
+    "desc_ja": "後入れ先出し(LIFO)のデータ構造。",
+    "desc_en": "Last-In, First-Out (LIFO) data structure."
+  },
+  {
+    "target": "QUEUE",
+    "ja": "キュー",
+    "en": "Queue",
+    "category": "Data Structure",
+    "full": "Queue",
+    "desc_ja": "先入れ先出し(FIFO)のデータ構造。",
+    "desc_en": "First-In, First-Out (FIFO) data structure."
+  },
+  {
+    "target": "HEAP",
+    "ja": "ヒープ",
+    "en": "Heap",
+    "category": "Data Structure",
+    "full": "Heap",
+    "desc_ja": "優先順位付きキューなどに使われる木構造。",
+    "desc_en": "Tree-based structure used for priority queues."
+  },
+  {
+    "target": "GRAPH",
+    "ja": "グラフ",
+    "en": "Graph",
+    "category": "Data Structure",
+    "full": "Graph",
+    "desc_ja": "ノードとエッジで構成されるデータ構造。",
+    "desc_en": "Structure consisting of nodes and edges."
+  },
+  {
+    "target": "TREE",
+    "ja": "木構造",
+    "en": "Tree",
+    "category": "Data Structure",
+    "full": "Tree",
+    "desc_ja": "階層的なデータ構造。",
+    "desc_en": "Hierarchical data structure."
+  },
+  {
+    "target": "NODE",
+    "ja": "ノード",
+    "en": "Node",
+    "category": "Data Structure",
+    "full": "Node",
+    "desc_ja": "データ構造の構成要素。",
+    "desc_en": "A basic unit of a data structure."
+  },
+  {
+    "target": "EDGE",
+    "ja": "エッジ",
+    "en": "Edge",
+    "category": "Data Structure",
+    "full": "Edge",
+    "desc_ja": "ノード間を結ぶ線。",
+    "desc_en": "A connection between two nodes."
+  },
+  {
+    "target": "HASH",
+    "ja": "ハッシュ",
+    "en": "Hash",
+    "category": "Security",
+    "full": "Hash Function",
+    "desc_ja": "データを固定長の文字列に変換する関数。",
+    "desc_en": "Function converting data to fixed-size string."
+  },
+  {
+    "target": "TOKEN",
+    "ja": "トークン",
+    "en": "Token",
+    "category": "Security",
+    "full": "Access Token",
+    "desc_ja": "アクセス権限を示す証。",
+    "desc_en": "Proof of access rights."
+  },
+  {
+    "target": "LOGIN",
+    "ja": "ログイン",
+    "en": "Login",
+    "category": "Security",
+    "full": "Login",
+    "desc_ja": "システムへの接続認証。",
+    "desc_en": "Authentication for system access."
+  },
+  {
+    "target": "ADMIN",
+    "ja": "管理者",
+    "en": "Admin",
+    "category": "Security",
+    "full": "Administrator",
+    "desc_ja": "システムを管理する権限を持つユーザー。",
+    "desc_en": "User with system management privileges."
+  },
+  {
+    "target": "USER",
+    "ja": "ユーザー",
+    "en": "User",
+    "category": "Security",
+    "full": "User",
+    "desc_ja": "システムを利用する人。",
+    "desc_en": "Person using the system."
+  },
+  {
+    "target": "GROUP",
+    "ja": "グループ",
+    "en": "Group",
+    "category": "Security",
+    "full": "User Group",
+    "desc_ja": "ユーザーの集合。",
+    "desc_en": "Collection of users."
+  },
+  {
+    "target": "ROLE",
+    "ja": "ロール",
+    "en": "Role",
+    "category": "Security",
+    "full": "Role",
+    "desc_ja": "権限のセット。",
+    "desc_en": "Set of permissions."
+  },
+  {
+    "target": "POLICY",
+    "ja": "ポリシー",
+    "en": "Policy",
+    "category": "Security",
+    "full": "Security Policy",
+    "desc_ja": "運用の方針やルール。",
+    "desc_en": "Rules and guidelines for operation."
+  },
+  {
+    "target": "ACCESS",
+    "ja": "アクセス",
+    "en": "Access",
+    "category": "Security",
+    "full": "Access Control",
+    "desc_ja": "リソースへの接続。",
+    "desc_en": "Connection to resources."
+  },
+  {
+    "target": "DENY",
+    "ja": "拒否",
+    "en": "Deny",
+    "category": "Security",
+    "full": "Deny",
+    "desc_ja": "アクセスを許可しないこと。",
+    "desc_en": "Not allowing access."
+  },
+  {
+    "target": "ALLOW",
+    "ja": "許可",
+    "en": "Allow",
+    "category": "Security",
+    "full": "Allow",
+    "desc_ja": "アクセスを許可すること。",
+    "desc_en": "Permitting access."
+  },
+  {
+    "target": "DEBUG",
+    "ja": "デバッグ",
+    "en": "Debug",
+    "category": "Dev",
+    "full": "Debugging",
+    "desc_ja": "バグを見つけて修正する作業。",
+    "desc_en": "Finding and fixing bugs."
+  },
+  {
+    "target": "BUILD",
+    "ja": "ビルド",
+    "en": "Build",
+    "category": "Dev",
+    "full": "Build",
+    "desc_ja": "ソースコードを実行可能な形式に変換すること。",
+    "desc_en": "Converting source code to executable format."
+  },
+  {
+    "target": "DEPLOY",
+    "ja": "デプロイ",
+    "en": "Deploy",
+    "category": "Dev",
+    "full": "Deployment",
+    "desc_ja": "本番環境に配置して利用可能にすること。",
+    "desc_en": "Making software available for use."
+  },
+  {
+    "target": "MERGE",
+    "ja": "マージ",
+    "en": "Merge",
+    "category": "Dev",
+    "full": "Merge",
+    "desc_ja": "複数の変更を統合すること。",
+    "desc_en": "Integrating multiple changes."
+  },
+  {
+    "target": "COMMIT",
+    "ja": "コミット",
+    "en": "Commit",
+    "category": "Dev",
+    "full": "Commit",
+    "desc_ja": "変更を記録すること。",
+    "desc_en": "Recording changes."
+  },
+  {
+    "target": "PUSH",
+    "ja": "プッシュ",
+    "en": "Push",
+    "category": "Dev",
+    "full": "Push",
+    "desc_ja": "ローカルの変更をリモートに送信すること。",
+    "desc_en": "Sending local changes to remote."
+  },
+  {
+    "target": "PULL",
+    "ja": "プル",
+    "en": "Pull",
+    "category": "Dev",
+    "full": "Pull",
+    "desc_ja": "リモートの変更を取り込むこと。",
+    "desc_en": "Fetching and integrating remote changes."
+  },
+  {
+    "target": "FETCH",
+    "ja": "フェッチ",
+    "en": "Fetch",
+    "category": "Dev",
+    "full": "Fetch",
+    "desc_ja": "リモートの変更情報を取得すること。",
+    "desc_en": "Retrieving remote change info."
+  },
+  {
+    "target": "CLONE",
+    "ja": "クローン",
+    "en": "Clone",
+    "category": "Dev",
+    "full": "Clone",
+    "desc_ja": "リポジトリを複製すること。",
+    "desc_en": "Copying a repository."
+  },
+  {
+    "target": "FORK",
+    "ja": "フォーク",
+    "en": "Fork",
+    "category": "Dev",
+    "full": "Fork",
+    "desc_ja": "他人のリポジトリを自分のアカウントに複製すること。",
+    "desc_en": "Copying a repo to your account."
+  },
+  {
+    "target": "BRANCH",
+    "ja": "ブランチ",
+    "en": "Branch",
+    "category": "Dev",
+    "full": "Branch",
+    "desc_ja": "開発の分岐。",
+    "desc_en": "A divergence in development."
+  },
+  {
+    "target": "TAG",
+    "ja": "タグ",
+    "en": "Tag",
+    "category": "Dev",
+    "full": "Tag",
+    "desc_ja": "特定のコミットに付ける目印。",
+    "desc_en": "A marker for a specific commit."
+  },
+  {
+    "target": "HEAD",
+    "ja": "ヘッド",
+    "en": "Head",
+    "category": "Dev",
+    "full": "HEAD",
+    "desc_ja": "現在の作業場所を示すポインタ。",
+    "desc_en": "Pointer to current working commit."
+  },
+  {
+    "target": "MAIN",
+    "ja": "メイン",
+    "en": "Main",
+    "category": "Dev",
+    "full": "Main Branch",
+    "desc_ja": "主要な開発ブランチ。",
+    "desc_en": "Primary development branch."
+  },
+  {
+    "target": "ORIGIN",
+    "ja": "オリジン",
+    "en": "Origin",
+    "category": "Dev",
+    "full": "Origin",
+    "desc_ja": "デフォルトのリモートリポジトリ。",
+    "desc_en": "Default remote repository."
+  },
+  {
+    "target": "REMOTE",
+    "ja": "リモート",
+    "en": "Remote",
+    "category": "Dev",
+    "full": "Remote Repository",
+    "desc_ja": "ネットワーク上のリポジトリ。",
+    "desc_en": "Repository on the network."
+  },
+  {
+    "target": "LOCAL",
+    "ja": "ローカル",
+    "en": "Local",
+    "category": "Dev",
+    "full": "Local Repository",
+    "desc_ja": "手元のコンピュータ上のリポジトリ。",
+    "desc_en": "Repository on your computer."
+  },
+  {
+    "target": "STASH",
+    "ja": "スタッシュ",
+    "en": "Stash",
+    "category": "Dev",
+    "full": "Git Stash",
+    "desc_ja": "作業中の変更を一時退避すること。",
+    "desc_en": "Temporarily shelving changes."
+  },
+  {
+    "target": "REBASE",
+    "ja": "リベース",
+    "en": "Rebase",
+    "category": "Dev",
+    "full": "Git Rebase",
+    "desc_ja": "コミットの履歴を書き換えて統合すること。",
+    "desc_en": "Reapplying commits on top of another base."
+  },
+  {
+    "target": "RESET",
+    "ja": "リセット",
+    "en": "Reset",
+    "category": "Dev",
+    "full": "Git Reset",
+    "desc_ja": "状態を過去の時点に戻すこと。",
+    "desc_en": "Returning to a previous state."
+  },
+  {
+    "target": "REVERT",
+    "ja": "リバート",
+    "en": "Revert",
+    "category": "Dev",
+    "full": "Git Revert",
+    "desc_ja": "特定のコミットを打ち消すコミットを作成すること。",
+    "desc_en": "Creating a commit that undoes changes."
+  },
+  {
+    "target": "DIFF",
+    "ja": "差分",
+    "en": "Diff",
+    "category": "Dev",
+    "full": "Difference",
+    "desc_ja": "ファイル間の違い。",
+    "desc_en": "Changes between files."
+  },
+  {
+    "target": "PATCH",
+    "ja": "パッチ",
+    "en": "Patch",
+    "category": "Dev",
+    "full": "Patch",
+    "desc_ja": "修正用のデータ。",
+    "desc_en": "Data for applying fixes."
+  },
+  {
+    "target": "ISSUE",
+    "ja": "課題",
+    "en": "Issue",
+    "category": "Dev",
+    "full": "Issue",
+    "desc_ja": "解決すべき問題やタスク。",
+    "desc_en": "Problem or task to be resolved."
+  },
+  {
+    "target": "BUG",
+    "ja": "バグ",
+    "en": "Bug",
+    "category": "Dev",
+    "full": "Software Bug",
+    "desc_ja": "プログラムの不具合。",
+    "desc_en": "Error or flaw in software."
+  },
+  {
+    "target": "FIX",
+    "ja": "修正",
+    "en": "Fix",
+    "category": "Dev",
+    "full": "Hotfix",
+    "desc_ja": "バグ修正。",
+    "desc_en": "Correction of a bug."
+  },
+  {
+    "target": "TEST",
+    "ja": "テスト",
+    "en": "Test",
+    "category": "Dev",
+    "full": "Software Testing",
+    "desc_ja": "動作確認。",
+    "desc_en": "Verifying functionality."
+  },
+  {
+    "target": "UNIT",
+    "ja": "ユニット",
+    "en": "Unit",
+    "category": "Dev",
+    "full": "Unit Test",
+    "desc_ja": "最小単位のテスト。",
+    "desc_en": "Testing individual components."
+  },
+  {
+    "target": "MOCK",
+    "ja": "モック",
+    "en": "Mock",
+    "category": "Dev",
+    "full": "Mock Object",
+    "desc_ja": "テスト用の偽物のオブジェクト。",
+    "desc_en": "Simulated object for testing."
+  },
+  {
+    "target": "STUB",
+    "ja": "スタブ",
+    "en": "Stub",
+    "category": "Dev",
+    "full": "Test Stub",
+    "desc_ja": "テスト用の代用プログラム。",
+    "desc_en": "Placeholder for testing."
+  },
+  {
+    "target": "SPY",
+    "ja": "スパイ",
+    "en": "Spy",
+    "category": "Dev",
+    "full": "Test Spy",
+    "desc_ja": "呼び出しを記録するテスト用オブジェクト。",
+    "desc_en": "Object that records calls for testing."
+  },
+  {
+    "target": "SUITE",
+    "ja": "スイート",
+    "en": "Suite",
+    "category": "Dev",
+    "full": "Test Suite",
+    "desc_ja": "テストケースのまとまり。",
+    "desc_en": "Collection of test cases."
+  },
+  {
+    "target": "COVER",
+    "ja": "カバレッジ",
+    "en": "Coverage",
+    "category": "Dev",
+    "full": "Code Coverage",
+    "desc_ja": "テストが網羅している割合。",
+    "desc_en": "Percentage of code tested."
+  },
+  {
+    "target": "LINT",
+    "ja": "リント",
+    "en": "Lint",
+    "category": "Dev",
+    "full": "Linter",
+    "desc_ja": "静的解析ツール。",
+    "desc_en": "Static analysis tool."
+  },
+  {
+    "target": "FORMAT",
+    "ja": "フォーマット",
+    "en": "Format",
+    "category": "Dev",
+    "full": "Formatter",
+    "desc_ja": "コードの整形。",
+    "desc_en": "Code styling/formatting."
+  },
+  {
+    "target": "STYLE",
+    "ja": "スタイル",
+    "en": "Style",
+    "category": "Dev",
+    "full": "Coding Style",
+    "desc_ja": "コードの書き方の規約。",
+    "desc_en": "Conventions for writing code."
+  },
+  {
+    "target": "DOCS",
+    "ja": "ドキュメント",
+    "en": "Docs",
+    "category": "Dev",
+    "full": "Documentation",
+    "desc_ja": "仕様書や説明書。",
+    "desc_en": "Manuals and specifications."
+  },
+  {
+    "target": "WIKI",
+    "ja": "ウィキ",
+    "en": "Wiki",
+    "category": "Dev",
+    "full": "Wiki",
+    "desc_ja": "情報共有のためのWebシステム。",
+    "desc_en": "Web system for knowledge sharing."
+  },
+  {
+    "target": "README",
+    "ja": "リードミー",
+    "en": "Readme",
+    "category": "Dev",
+    "full": "README",
+    "desc_ja": "プロジェクトの概要説明ファイル。",
+    "desc_en": "Project overview file."
+  },
+  {
+    "target": "TODO",
+    "ja": "ToDo",
+    "en": "Todo",
+    "category": "Dev",
+    "full": "To Do",
+    "desc_ja": "やるべきこと。",
+    "desc_en": "Tasks to be done."
+  },
+  {
+    "target": "NOTE",
+    "ja": "ノート",
+    "en": "Note",
+    "category": "Dev",
+    "full": "Note",
+    "desc_ja": "メモや注釈。",
+    "desc_en": "Memorandum or annotation."
+  },
+  {
+    "target": "WARN",
+    "ja": "警告",
+    "en": "Warn",
+    "category": "Dev",
+    "full": "Warning",
+    "desc_ja": "注意喚起。",
+    "desc_en": "Alert for potential issue."
+  },
+  {
+    "target": "ERROR",
+    "ja": "エラー",
+    "en": "Error",
+    "category": "Dev",
+    "full": "Error",
+    "desc_ja": "異常終了や不具合。",
+    "desc_en": "Failure or incorrect result."
+  },
+  {
+    "target": "FATAL",
+    "ja": "致命的",
+    "en": "Fatal",
+    "category": "Dev",
+    "full": "Fatal Error",
+    "desc_ja": "回復不可能なエラー。",
+    "desc_en": "Unrecoverable error."
+  },
+  {
+    "target": "INFO",
+    "ja": "情報",
+    "en": "Info",
+    "category": "Dev",
+    "full": "Information",
+    "desc_ja": "通知やログ情報。",
+    "desc_en": "Notification or log info."
+  },
+  {
+    "target": "TRACE",
+    "ja": "トレース",
+    "en": "Trace",
+    "category": "Dev",
+    "full": "Stack Trace",
+    "desc_ja": "実行履歴の追跡。",
+    "desc_en": "Tracking execution history."
+  },
+  {
+    "target": "PRINT",
+    "ja": "出力",
+    "en": "Print",
+    "category": "Dev",
+    "full": "Print",
+    "desc_ja": "画面への表示。",
+    "desc_en": "Displaying to screen."
+  },
+  {
+    "target": "ECHO",
+    "ja": "エコー",
+    "en": "Echo",
+    "category": "Dev",
+    "full": "Echo",
+    "desc_ja": "入力をそのまま出力すること。",
+    "desc_en": "Outputting input as is."
+  },
+  {
+    "target": "READ",
+    "ja": "読み込み",
+    "en": "Read",
+    "category": "IO",
+    "full": "Read",
+    "desc_ja": "データを読み取ること。",
+    "desc_en": "Reading data."
+  },
+  {
+    "target": "WRITE",
+    "ja": "書き込み",
+    "en": "Write",
+    "category": "IO",
+    "full": "Write",
+    "desc_ja": "データを書き込むこと。",
+    "desc_en": "Writing data."
+  },
+  {
+    "target": "OPEN",
+    "ja": "開く",
+    "en": "Open",
+    "category": "IO",
+    "full": "Open",
+    "desc_ja": "ファイルや接続を開くこと。",
+    "desc_en": "Opening a file or connection."
+  },
+  {
+    "target": "CLOSE",
+    "ja": "閉じる",
+    "en": "Close",
+    "category": "IO",
+    "full": "Close",
+    "desc_ja": "ファイルや接続を閉じること。",
+    "desc_en": "Closing a file or connection."
+  },
+  {
+    "target": "FILE",
+    "ja": "ファイル",
+    "en": "File",
+    "category": "IO",
+    "full": "File",
+    "desc_ja": "データの集合体。",
+    "desc_en": "A collection of data."
+  },
+  {
+    "target": "DIR",
+    "ja": "ディレクトリ",
+    "en": "Directory",
+    "category": "IO",
+    "full": "Directory",
+    "desc_ja": "ファイルを格納する場所。",
+    "desc_en": "A location for storing files."
+  },
+  {
+    "target": "PATH",
+    "ja": "パス",
+    "en": "Path",
+    "category": "IO",
+    "full": "Path",
+    "desc_ja": "ファイルやディレクトリの場所。",
+    "desc_en": "Location of a file or directory."
+  },
+  {
+    "target": "ROOT",
+    "ja": "ルート",
+    "en": "Root",
+    "category": "IO",
+    "full": "Root Directory",
+    "desc_ja": "最上位のディレクトリ。",
+    "desc_en": "The top-level directory."
+  },
+  {
+    "target": "HOME",
+    "ja": "ホーム",
+    "en": "Home",
+    "category": "IO",
+    "full": "Home Directory",
+    "desc_ja": "ユーザーの個人用ディレクトリ。",
+    "desc_en": "User's personal directory."
+  },
+  {
+    "target": "TEMP",
+    "ja": "一時",
+    "en": "Temp",
+    "category": "IO",
+    "full": "Temporary",
+    "desc_ja": "一時的なデータを置く場所。",
+    "desc_en": "Place for temporary data."
+  },
+  {
+    "target": "LOG",
+    "ja": "ログ",
+    "en": "Log",
+    "category": "IO",
+    "full": "Log",
+    "desc_ja": "記録された情報。",
+    "desc_en": "Recorded information."
+  },
+  {
+    "target": "DATA",
+    "ja": "データ",
+    "en": "Data",
+    "category": "IO",
+    "full": "Data",
+    "desc_ja": "情報の集まり。",
+    "desc_en": "Collection of information."
+  },
+  {
+    "target": "TEXT",
+    "ja": "テキスト",
+    "en": "Text",
+    "category": "IO",
+    "full": "Text",
+    "desc_ja": "文字データ。",
+    "desc_en": "Character data."
+  },
+  {
+    "target": "JSON",
+    "ja": "JSON",
+    "en": "JSON",
+    "category": "Format",
+    "full": "JavaScript Object Notation",
+    "desc_ja": "データ交換フォーマット。",
+    "desc_en": "Data interchange format."
+  },
+  {
+    "target": "XML",
+    "ja": "XML",
+    "en": "XML",
+    "category": "Format",
+    "full": "Extensible Markup Language",
+    "desc_ja": "マークアップ言語。",
+    "desc_en": "Markup language."
+  },
+  {
+    "target": "YAML",
+    "ja": "YAML",
+    "en": "YAML",
+    "category": "Format",
+    "full": "YAML Ain't Markup Language",
+    "desc_ja": "設定ファイルによく使われる形式。",
+    "desc_en": "Format often used for config files."
+  },
+  {
+    "target": "HTML",
+    "ja": "HTML",
+    "en": "HTML",
+    "category": "Format",
+    "full": "HyperText Markup Language",
+    "desc_ja": "Webページの構造を記述する言語。",
+    "desc_en": "Language for describing web page structure."
+  },
+  {
+    "target": "CSS",
+    "ja": "CSS",
+    "en": "CSS",
+    "category": "Format",
+    "full": "Cascading Style Sheets",
+    "desc_ja": "Webページの見た目を記述する言語。",
+    "desc_en": "Language for describing web page style."
+  },
+  {
+    "target": "SQL",
+    "ja": "SQL",
+    "en": "SQL",
+    "category": "Format",
+    "full": "Structured Query Language",
+    "desc_ja": "データベース操作言語。",
+    "desc_en": "Database manipulation language."
+  },
+  {
+    "target": "CSV",
+    "ja": "CSV",
+    "en": "CSV",
+    "category": "Format",
+    "full": "Comma-Separated Values",
+    "desc_ja": "カンマ区切りデータ。",
+    "desc_en": "Comma-separated data."
+  },
+  {
+    "target": "PDF",
+    "ja": "PDF",
+    "en": "PDF",
+    "category": "Format",
+    "full": "Portable Document Format",
+    "desc_ja": "文書フォーマット。",
+    "desc_en": "Document format."
+  },
+  {
+    "target": "ZIP",
+    "ja": "ZIP",
+    "en": "ZIP",
+    "category": "Format",
+    "full": "ZIP",
+    "desc_ja": "圧縮ファイル形式。",
+    "desc_en": "Compression file format."
+  },
+  {
+    "target": "TAR",
+    "ja": "TAR",
+    "en": "TAR",
+    "category": "Format",
+    "full": "Tape Archive",
+    "desc_ja": "アーカイブファイル形式。",
+    "desc_en": "Archive file format."
+  },
+  {
+    "target": "GZIP",
+    "ja": "GZIP",
+    "en": "GZIP",
+    "category": "Format",
+    "full": "GNU Zip",
+    "desc_ja": "圧縮ファイル形式。",
+    "desc_en": "Compression file format."
+  },
+  {
+    "target": "JPEG",
+    "ja": "JPEG",
+    "en": "JPEG",
+    "category": "Format",
+    "full": "Joint Photographic Experts Group",
+    "desc_ja": "画像ファイル形式。",
+    "desc_en": "Image file format."
+  },
+  {
+    "target": "PNG",
+    "ja": "PNG",
+    "en": "PNG",
+    "category": "Format",
+    "full": "Portable Network Graphics",
+    "desc_ja": "画像ファイル形式。",
+    "desc_en": "Image file format."
+  },
+  {
+    "target": "GIF",
+    "ja": "GIF",
+    "en": "GIF",
+    "category": "Format",
+    "full": "Graphics Interchange Format",
+    "desc_ja": "画像ファイル形式。",
+    "desc_en": "Image file format."
+  },
+  {
+    "target": "SVG",
+    "ja": "SVG",
+    "en": "SVG",
+    "category": "Format",
+    "full": "Scalable Vector Graphics",
+    "desc_ja": "ベクター画像形式。",
+    "desc_en": "Vector image format."
+  },
+  {
+    "target": "MP3",
+    "ja": "MP3",
+    "en": "MP3",
+    "category": "Format",
+    "full": "MPEG-1 Audio Layer 3",
+    "desc_ja": "音声ファイル形式。",
+    "desc_en": "Audio file format."
+  },
+  {
+    "target": "MP4",
+    "ja": "MP4",
+    "en": "MP4",
+    "category": "Format",
+    "full": "MPEG-4 Part 14",
+    "desc_ja": "動画ファイル形式。",
+    "desc_en": "Video file format."
+  },
+  {
+    "target": "WAV",
+    "ja": "WAV",
+    "en": "WAV",
+    "category": "Format",
+    "full": "Waveform Audio File Format",
+    "desc_ja": "音声ファイル形式。",
+    "desc_en": "Audio file format."
+  },
+  {
+    "target": "AVI",
+    "ja": "AVI",
+    "en": "AVI",
+    "category": "Format",
+    "full": "Audio Video Interleave",
+    "desc_ja": "動画ファイル形式。",
+    "desc_en": "Video file format."
+  },
+  {
+    "target": "MOV",
+    "ja": "MOV",
+    "en": "MOV",
+    "category": "Format",
+    "full": "QuickTime File Format",
+    "desc_ja": "動画ファイル形式。",
+    "desc_en": "Video file format."
+  },
+  {
+    "target": "WEB",
+    "ja": "ウェブ",
+    "en": "Web",
+    "category": "Web",
+    "full": "World Wide Web",
+    "desc_ja": "インターネット上の情報システム。",
+    "desc_en": "Information system on the internet."
+  },
+  {
+    "target": "NET",
+    "ja": "ネット",
+    "en": "Net",
+    "category": "Web",
+    "full": "Network",
+    "desc_ja": "ネットワーク。",
+    "desc_en": "Network."
+  },
+  {
+    "target": "COM",
+    "ja": "コム",
+    "en": "Com",
+    "category": "Web",
+    "full": "Commercial",
+    "desc_ja": "商用ドメイン。",
+    "desc_en": "Commercial domain."
+  },
+  {
+    "target": "ORG",
+    "ja": "オーグ",
+    "en": "Org",
+    "category": "Web",
+    "full": "Organization",
+    "desc_ja": "非営利組織ドメイン。",
+    "desc_en": "Non-profit organization domain."
+  },
+  {
+    "target": "EDU",
+    "ja": "エデュ",
+    "en": "Edu",
+    "category": "Web",
+    "full": "Education",
+    "desc_ja": "教育機関ドメイン。",
+    "desc_en": "Educational institution domain."
+  },
+  {
+    "target": "GOV",
+    "ja": "ガブ",
+    "en": "Gov",
+    "category": "Web",
+    "full": "Government",
+    "desc_ja": "政府機関ドメイン。",
+    "desc_en": "Government domain."
+  },
+  {
+    "target": "MIL",
+    "ja": "ミル",
+    "en": "Mil",
+    "category": "Web",
+    "full": "Military",
+    "desc_ja": "軍事機関ドメイン。",
+    "desc_en": "Military domain."
+  },
+  {
+    "target": "INT",
+    "ja": "イント",
+    "en": "Int",
+    "category": "Web",
+    "full": "International",
+    "desc_ja": "国際機関ドメイン。",
+    "desc_en": "International organization domain."
+  },
+  {
+    "target": "IO",
+    "ja": "アイオー",
+    "en": "IO",
+    "category": "Web",
+    "full": "Input/Output",
+    "desc_ja": "入出力。",
+    "desc_en": "Input/Output."
+  },
+  {
+    "target": "AI",
+    "ja": "AI",
+    "en": "AI",
+    "category": "Tech",
+    "full": "Artificial Intelligence",
+    "desc_ja": "人工知能。",
+    "desc_en": "Artificial Intelligence."
+  },
+  {
+    "target": "ML",
+    "ja": "機械学習",
+    "en": "ML",
+    "category": "Tech",
+    "full": "Machine Learning",
+    "desc_ja": "データから学習する技術。",
+    "desc_en": "Technology that learns from data."
+  },
+  {
+    "target": "DL",
+    "ja": "深層学習",
+    "en": "DL",
+    "category": "Tech",
+    "full": "Deep Learning",
+    "desc_ja": "多層ニューラルネットワークによる学習。",
+    "desc_en": "Learning with multi-layer neural networks."
+  },
+  {
+    "target": "NN",
+    "ja": "ニューラルネット",
+    "en": "NN",
+    "category": "Tech",
+    "full": "Neural Network",
+    "desc_ja": "脳の神経回路を模したモデル。",
+    "desc_en": "Model mimicking brain neural circuits."
+  },
+  {
+    "target": "VR",
+    "ja": "VR",
+    "en": "VR",
+    "category": "Tech",
+    "full": "Virtual Reality",
+    "desc_ja": "仮想現実。",
+    "desc_en": "Virtual Reality."
+  },
+  {
+    "target": "AR",
+    "ja": "AR",
+    "en": "AR",
+    "category": "Tech",
+    "full": "Augmented Reality",
+    "desc_ja": "拡張現実。",
+    "desc_en": "Augmented Reality."
+  },
+  {
+    "target": "MR",
+    "ja": "MR",
+    "en": "MR",
+    "category": "Tech",
+    "full": "Mixed Reality",
+    "desc_ja": "複合現実。",
+    "desc_en": "Mixed Reality."
+  },
+  {
+    "target": "XR",
+    "ja": "XR",
+    "en": "XR",
+    "category": "Tech",
+    "full": "Extended Reality",
+    "desc_ja": "VR/AR/MRの総称。",
+    "desc_en": "Umbrella term for VR/AR/MR."
+  },
+  {
+    "target": "IOT",
+    "ja": "IoT",
+    "en": "IoT",
+    "category": "Tech",
+    "full": "Internet of Things",
+    "desc_ja": "モノのインターネット。",
+    "desc_en": "Internet of Things."
+  },
+  {
+    "target": "NFT",
+    "ja": "NFT",
+    "en": "NFT",
+    "category": "Tech",
+    "full": "Non-Fungible Token",
+    "desc_ja": "非代替性トークン。",
+    "desc_en": "Non-Fungible Token."
+  },
+  {
+    "target": "DAO",
+    "ja": "DAO",
+    "en": "DAO",
+    "category": "Tech",
+    "full": "Decentralized Autonomous Organization",
+    "desc_ja": "分散型自律組織。",
+    "desc_en": "Decentralized Autonomous Organization."
+  },
+  {
+    "target": "DEFI",
+    "ja": "DeFi",
+    "en": "DeFi",
+    "category": "Tech",
+    "full": "Decentralized Finance",
+    "desc_ja": "分散型金融。",
+    "desc_en": "Decentralized Finance."
+  },
+  {
+    "target": "DAPP",
+    "ja": "DApp",
+    "en": "DApp",
+    "category": "Tech",
+    "full": "Decentralized Application",
+    "desc_ja": "分散型アプリケーション。",
+    "desc_en": "Decentralized Application."
+  },
+  {
+    "target": "WEB3",
+    "ja": "Web3",
+    "en": "Web3",
+    "category": "Tech",
+    "full": "Web3",
+    "desc_ja": "分散型ウェブ。",
+    "desc_en": "Decentralized Web."
+  },
+  {
+    "target": "META",
+    "ja": "メタ",
+    "en": "Meta",
+    "category": "Tech",
+    "full": "Meta",
+    "desc_ja": "高次な、超越した。",
+    "desc_en": "Higher order, transcending."
+  },
+  {
+    "target": "BETA",
+    "ja": "ベータ",
+    "en": "Beta",
+    "category": "Tech",
+    "full": "Beta Version",
+    "desc_ja": "テスト版。",
+    "desc_en": "Test version."
+  },
+  {
+    "target": "ALPHA",
+    "ja": "アルファ",
+    "en": "Alpha",
+    "category": "Tech",
+    "full": "Alpha Version",
+    "desc_ja": "初期テスト版。",
+    "desc_en": "Early test version."
+  },
+  {
+    "target": "DEMO",
+    "ja": "デモ",
+    "en": "Demo",
+    "category": "Tech",
+    "full": "Demonstration",
+    "desc_ja": "実演。",
+    "desc_en": "Demonstration."
+  },
+  {
+    "target": "PRO",
+    "ja": "プロ",
+    "en": "Pro",
+    "category": "Tech",
+    "full": "Professional",
+    "desc_ja": "プロフェッショナル。",
+    "desc_en": "Professional."
+  },
+  {
+    "target": "LITE",
+    "ja": "ライト",
+    "en": "Lite",
+    "category": "Tech",
+    "full": "Lite",
+    "desc_ja": "軽量版。",
+    "desc_en": "Lightweight version."
+  },
+  {
+    "target": "PLUS",
+    "ja": "プラス",
+    "en": "Plus",
+    "category": "Tech",
+    "full": "Plus",
+    "desc_ja": "追加、拡張。",
+    "desc_en": "Addition, extension."
+  },
+  {
+    "target": "MAX",
+    "ja": "マックス",
+    "en": "Max",
+    "category": "Tech",
+    "full": "Maximum",
+    "desc_ja": "最大。",
+    "desc_en": "Maximum."
+  },
+  {
+    "target": "MIN",
+    "ja": "ミニ",
+    "en": "Min",
+    "category": "Tech",
+    "full": "Minimum",
+    "desc_ja": "最小。",
+    "desc_en": "Minimum."
+  },
+  {
+    "target": "AVG",
+    "ja": "平均",
+    "en": "Avg",
+    "category": "Tech",
+    "full": "Average",
+    "desc_ja": "平均値。",
+    "desc_en": "Average value."
+  },
+  {
+    "target": "SUM",
+    "ja": "合計",
+    "en": "Sum",
+    "category": "Tech",
+    "full": "Sum",
+    "desc_ja": "合計値。",
+    "desc_en": "Total value."
+  },
+  {
+    "target": "COUNT",
+    "ja": "カウント",
+    "en": "Count",
+    "category": "Tech",
+    "full": "Count",
+    "desc_ja": "数。",
+    "desc_en": "Number of items."
+  },
+  {
+    "target": "LEN",
+    "ja": "長さ",
+    "en": "Len",
+    "category": "Tech",
+    "full": "Length",
+    "desc_ja": "長さ。",
+    "desc_en": "Length."
+  },
+  {
+    "target": "SIZE",
+    "ja": "サイズ",
+    "en": "Size",
+    "category": "Tech",
+    "full": "Size",
+    "desc_ja": "大きさ。",
+    "desc_en": "Magnitude or dimensions."
+  },
+  {
+    "target": "TYPE",
+    "ja": "型",
+    "en": "Type",
+    "category": "Tech",
+    "full": "Data Type",
+    "desc_ja": "データの種類。",
+    "desc_en": "Classification of data."
+  },
+  {
+    "target": "VOID",
+    "ja": "ボイド",
+    "en": "Void",
+    "category": "Tech",
+    "full": "Void",
+    "desc_ja": "値がないこと。",
+    "desc_en": "Absence of a value."
+  },
+  {
+    "target": "NULL",
+    "ja": "ヌル",
+    "en": "Null",
+    "category": "Tech",
+    "full": "Null",
+    "desc_ja": "無効な値。",
+    "desc_en": "Invalid or non-existent value."
+  },
+  {
+    "target": "NAN",
+    "ja": "非数",
+    "en": "NaN",
+    "category": "Tech",
+    "full": "Not a Number",
+    "desc_ja": "数値ではない値。",
+    "desc_en": "Value representing undefined number."
+  },
+  {
+    "target": "TRUE",
+    "ja": "真",
+    "en": "True",
+    "category": "Tech",
+    "full": "True",
+    "desc_ja": "真理値の真。",
+    "desc_en": "Boolean true."
+  },
+  {
+    "target": "FALSE",
+    "ja": "偽",
+    "en": "False",
+    "category": "Tech",
+    "full": "False",
+    "desc_ja": "真理値の偽。",
+    "desc_en": "Boolean false."
+  },
+  {
+    "target": "IF",
+    "ja": "もし",
+    "en": "If",
+    "category": "Tech",
+    "full": "If Statement",
+    "desc_ja": "条件分岐。",
+    "desc_en": "Conditional branch."
+  },
+  {
+    "target": "ELSE",
+    "ja": "そうでなければ",
+    "en": "Else",
+    "category": "Tech",
+    "full": "Else",
+    "desc_ja": "条件に合致しない場合。",
+    "desc_en": "Alternative conditional branch."
+  },
+  {
+    "target": "FOR",
+    "ja": "繰り返し",
+    "en": "For",
+    "category": "Tech",
+    "full": "For Loop",
+    "desc_ja": "回数指定の繰り返し。",
+    "desc_en": "Loop with a counter."
+  },
+  {
+    "target": "WHILE",
+    "ja": "間",
+    "en": "While",
+    "category": "Tech",
+    "full": "While Loop",
+    "desc_ja": "条件付き繰り返し。",
+    "desc_en": "Loop while condition is true."
+  },
+  {
+    "target": "DO",
+    "ja": "実行",
+    "en": "Do",
+    "category": "Tech",
+    "full": "Do-While Loop",
+    "desc_ja": "少なくとも一度は実行する繰り返し。",
+    "desc_en": "Loop that executes at least once."
+  },
+  {
+    "target": "SWITCH",
+    "ja": "分岐",
+    "en": "Switch",
+    "category": "Tech",
+    "full": "Switch Statement",
+    "desc_ja": "多方向分岐。",
+    "desc_en": "Multi-way branch."
+  },
+  {
+    "target": "CASE",
+    "ja": "場合",
+    "en": "Case",
+    "category": "Tech",
+    "full": "Case",
+    "desc_ja": "分岐の条件。",
+    "desc_en": "Branch condition."
+  },
+  {
+    "target": "BREAK",
+    "ja": "中断",
+    "en": "Break",
+    "category": "Tech",
+    "full": "Break",
+    "desc_ja": "ループや分岐からの脱出。",
+    "desc_en": "Exit from loop or switch."
+  },
+  {
+    "target": "NEXT",
+    "ja": "次",
+    "en": "Next",
+    "category": "Tech",
+    "full": "Next",
+    "desc_ja": "次の処理へ。",
+    "desc_en": "Proceed to next step."
+  },
+  {
+    "target": "GOTO",
+    "ja": "移動",
+    "en": "Goto",
+    "category": "Tech",
+    "full": "Go To",
+    "desc_ja": "指定した場所へジャンプ。",
+    "desc_en": "Jump to a specific label."
+  },
+  {
+    "target": "EXIT",
+    "ja": "終了",
+    "en": "Exit",
+    "category": "Tech",
+    "full": "Exit",
+    "desc_ja": "プログラムの終了。",
+    "desc_en": "Termination of program."
+  },
+  {
+    "target": "TRY",
+    "ja": "試行",
+    "en": "Try",
+    "category": "Tech",
+    "full": "Try Block",
+    "desc_ja": "例外が発生する可能性のある処理。",
+    "desc_en": "Block for exception handling."
+  },
+  {
+    "target": "CATCH",
+    "ja": "捕捉",
+    "en": "Catch",
+    "category": "Tech",
+    "full": "Catch Block",
+    "desc_ja": "例外を捕捉して処理する。",
+    "desc_en": "Handling caught exceptions."
+  },
+  {
+    "target": "THROW",
+    "ja": "投げる",
+    "en": "Throw",
+    "category": "Tech",
+    "full": "Throw",
+    "desc_ja": "例外を発生させる。",
+    "desc_en": "Raising an exception."
+  },
+  {
+    "target": "FINAL",
+    "ja": "最終",
+    "en": "Final",
+    "category": "Tech",
+    "full": "Finally / Final",
+    "desc_ja": "最終的な処理、または変更不可。",
+    "desc_en": "Final block or immutable."
+  },
+  {
+    "target": "CONST",
+    "ja": "定数",
+    "en": "Const",
+    "category": "Tech",
+    "full": "Constant",
+    "desc_ja": "変更できない値。",
+    "desc_en": "Immutable value."
+  },
+  {
+    "target": "VAR",
+    "ja": "変数",
+    "en": "Var",
+    "category": "Tech",
+    "full": "Variable",
+    "desc_ja": "値を格納する箱。",
+    "desc_en": "Container for a value."
+  },
+  {
+    "target": "LET",
+    "ja": "させる",
+    "en": "Let",
+    "category": "Tech",
+    "full": "Let",
+    "desc_ja": "ブロックスコープの変数宣言。",
+    "desc_en": "Block-scoped variable declaration."
+  },
+  {
+    "target": "FUNC",
+    "ja": "関数",
+    "en": "Func",
+    "category": "Tech",
+    "full": "Function",
+    "desc_ja": "処理のまとまり。",
+    "desc_en": "Block of code."
+  },
+  {
+    "target": "DEF",
+    "ja": "定義",
+    "en": "Def",
+    "category": "Tech",
+    "full": "Define",
+    "desc_ja": "関数や変数の定義。",
+    "desc_en": "Definition of function/variable."
+  },
+  {
+    "target": "RET",
+    "ja": "戻る",
+    "en": "Ret",
+    "category": "Tech",
+    "full": "Return",
+    "desc_ja": "値を返す。",
+    "desc_en": "Returning a value."
+  },
+  {
+    "target": "IMP",
+    "ja": "インポート",
+    "en": "Imp",
+    "category": "Tech",
+    "full": "Import",
+    "desc_ja": "外部モジュールの読み込み。",
+    "desc_en": "Loading external modules."
+  },
+  {
+    "target": "EXP",
+    "ja": "エクスポート",
+    "en": "Exp",
+    "category": "Tech",
+    "full": "Export",
+    "desc_ja": "モジュールの公開。",
+    "desc_en": "Exposing a module."
+  },
+  {
+    "target": "PKG",
+    "ja": "パッケージ",
+    "en": "Pkg",
+    "category": "Tech",
+    "full": "Package",
+    "desc_ja": "モジュールの集合。",
+    "desc_en": "Collection of modules."
+  },
+  {
+    "target": "LIB",
+    "ja": "ライブラリ",
+    "en": "Lib",
+    "category": "Tech",
+    "full": "Library",
+    "desc_ja": "再利用可能なコード集。",
+    "desc_en": "Collection of reusable code."
+  },
+  {
+    "target": "BIN",
+    "ja": "ビン",
+    "en": "Bin",
+    "category": "Tech",
+    "full": "Binary / Bin",
+    "desc_ja": "実行ファイル格納場所。",
+    "desc_en": "Executable file location."
+  },
+  {
+    "target": "SRC",
+    "ja": "ソース",
+    "en": "Src",
+    "category": "Tech",
+    "full": "Source",
+    "desc_ja": "ソースコード格納場所。",
+    "desc_en": "Source code location."
+  },
+  {
+    "target": "OBJ",
+    "ja": "オブジェクト",
+    "en": "Obj",
+    "category": "Tech",
+    "full": "Object",
+    "desc_ja": "オブジェクト。",
+    "desc_en": "Object."
+  },
+  {
+    "target": "DOC",
+    "ja": "ドキュメント",
+    "en": "Doc",
+    "category": "Tech",
+    "full": "Document",
+    "desc_ja": "文書。",
+    "desc_en": "Document."
+  },
+  {
+    "target": "IMG",
+    "ja": "画像",
+    "en": "Img",
+    "category": "Tech",
+    "full": "Image",
+    "desc_ja": "画像。",
+    "desc_en": "Image."
+  },
+  {
+    "target": "AUD",
+    "ja": "音声",
+    "en": "Aud",
+    "category": "Tech",
+    "full": "Audio",
+    "desc_ja": "音声。",
+    "desc_en": "Audio."
+  },
+  {
+    "target": "VID",
+    "ja": "動画",
+    "en": "Vid",
+    "category": "Tech",
+    "full": "Video",
+    "desc_ja": "動画。",
+    "desc_en": "Video."
+  },
+  {
+    "target": "DB",
+    "ja": "データベース",
+    "en": "DB",
+    "category": "Tech",
+    "full": "Database",
+    "desc_ja": "データの基地。",
+    "desc_en": "Data base."
+  },
+  {
+    "target": "API",
+    "ja": "API",
+    "en": "API",
+    "category": "Tech",
+    "full": "Application Programming Interface",
+    "desc_ja": "アプリ連携の窓口。",
+    "desc_en": "Interface for app integration."
+  },
+  {
+    "target": "SDK",
+    "ja": "SDK",
+    "en": "SDK",
+    "category": "Tech",
+    "full": "Software Development Kit",
+    "desc_ja": "開発キット。",
+    "desc_en": "Development kit."
+  },
+  {
+    "target": "CLI",
+    "ja": "CLI",
+    "en": "CLI",
+    "category": "Tech",
+    "full": "Command Line Interface",
+    "desc_ja": "文字による操作画面。",
+    "desc_en": "Text-based interface."
+  },
+  {
+    "target": "GUI",
+    "ja": "GUI",
+    "en": "GUI",
+    "category": "Tech",
+    "full": "Graphical User Interface",
+    "desc_ja": "画像による操作画面。",
+    "desc_en": "Graphical interface."
+  },
+  {
+    "target": "UI",
+    "ja": "UI",
+    "en": "UI",
+    "category": "Tech",
+    "full": "User Interface",
+    "desc_ja": "ユーザーとの接点。",
+    "desc_en": "User interface."
+  },
+  {
+    "target": "UX",
+    "ja": "UX",
+    "en": "UX",
+    "category": "Tech",
+    "full": "User Experience",
+    "desc_ja": "ユーザー体験。",
+    "desc_en": "User experience."
+  },
+  {
+    "target": "DX",
+    "ja": "DX",
+    "en": "DX",
+    "category": "Tech",
+    "full": "Developer Experience / Digital Transformation",
+    "desc_ja": "開発者体験 / デジタルトランスフォーメーション。",
+    "desc_en": "Dev experience / Digital Transformation."
+  },
+  {
+    "target": "QA",
+    "ja": "QA",
+    "en": "QA",
+    "category": "Tech",
+    "full": "Quality Assurance",
+    "desc_ja": "品質保証。",
+    "desc_en": "Quality Assurance."
+  },
+  {
+    "target": "PM",
+    "ja": "PM",
+    "en": "PM",
+    "category": "Tech",
+    "full": "Project Manager",
+    "desc_ja": "プロジェクトマネージャー。",
+    "desc_en": "Project Manager."
+  },
+  {
+    "target": "PO",
+    "ja": "PO",
+    "en": "PO",
+    "category": "Tech",
+    "full": "Product Owner",
+    "desc_ja": "プロダクトオーナー。",
+    "desc_en": "Product Owner."
+  },
+  {
+    "target": "CTO",
+    "ja": "CTO",
+    "en": "CTO",
+    "category": "Tech",
+    "full": "Chief Technology Officer",
+    "desc_ja": "最高技術責任者。",
+    "desc_en": "Chief Technology Officer."
+  },
+  {
+    "target": "CEO",
+    "ja": "CEO",
+    "en": "CEO",
+    "category": "Tech",
+    "full": "Chief Executive Officer",
+    "desc_ja": "最高経営責任者。",
+    "desc_en": "Chief Executive Officer."
+  },
+  {
+    "target": "CFO",
+    "ja": "CFO",
+    "en": "CFO",
+    "category": "Tech",
+    "full": "Chief Financial Officer",
+    "desc_ja": "最高財務責任者。",
+    "desc_en": "Chief Financial Officer."
+  },
+  {
+    "target": "COO",
+    "ja": "COO",
+    "en": "COO",
+    "category": "Tech",
+    "full": "Chief Operating Officer",
+    "desc_ja": "最高執行責任者。",
+    "desc_en": "Chief Operating Officer."
+  },
+  {
+    "target": "HR",
+    "ja": "人事",
+    "en": "HR",
+    "category": "Tech",
+    "full": "Human Resources",
+    "desc_ja": "人事部。",
+    "desc_en": "Human Resources."
+  },
+  {
+    "target": "PR",
+    "ja": "広報",
+    "en": "PR",
+    "category": "Tech",
+    "full": "Public Relations",
+    "desc_ja": "広報。",
+    "desc_en": "Public Relations."
+  },
+  {
+    "target": "IT",
+    "ja": "IT",
+    "en": "IT",
+    "category": "Tech",
+    "full": "Information Technology",
+    "desc_ja": "情報技術。",
+    "desc_en": "Information Technology."
+  },
+  {
+    "target": "ICT",
+    "ja": "ICT",
+    "en": "ICT",
+    "category": "Tech",
+    "full": "Information and Communication Technology",
+    "desc_ja": "情報通信技術。",
+    "desc_en": "Information and Communication Technology."
+  },
+  {
+    "target": "IS",
+    "ja": "情報システム",
+    "en": "IS",
+    "category": "Tech",
+    "full": "Information Systems",
+    "desc_ja": "情報システム。",
+    "desc_en": "Information Systems."
+  },
+  {
+    "target": "CS",
+    "ja": "計算機科学",
+    "en": "CS",
+    "category": "Tech",
+    "full": "Computer Science",
+    "desc_ja": "計算機科学。",
+    "desc_en": "Computer Science."
+  },
+  {
+    "target": "SE",
+    "ja": "SE",
+    "en": "SE",
+    "category": "Tech",
+    "full": "System Engineer",
+    "desc_ja": "システムエンジニア。",
+    "desc_en": "System Engineer."
+  },
+  {
+    "target": "PG",
+    "ja": "PG",
+    "en": "PG",
+    "category": "Tech",
+    "full": "Programmer",
+    "desc_ja": "プログラマー。",
+    "desc_en": "Programmer."
+  },
+  {
+    "target": "PM",
+    "ja": "PM",
+    "en": "PM",
+    "category": "Tech",
+    "full": "Product Manager",
+    "desc_ja": "プロダクトマネージャー。",
+    "desc_en": "Product Manager."
+  },
+  {
+    "target": "PL",
+    "ja": "PL",
+    "en": "PL",
+    "category": "Tech",
+    "full": "Project Leader",
+    "desc_ja": "プロジェクトリーダー。",
+    "desc_en": "Project Leader."
+  },
+  {
+    "target": "TL",
+    "ja": "TL",
+    "en": "TL",
+    "category": "Tech",
+    "full": "Team Leader",
+    "desc_ja": "チームリーダー。",
+    "desc_en": "Team Leader."
+  },
+  {
+    "target": "SL",
+    "ja": "SL",
+    "en": "SL",
+    "category": "Tech",
+    "full": "Sub Leader",
+    "desc_ja": "サブリーダー。",
+    "desc_en": "Sub Leader."
+  },
+  {
+    "target": "GL",
+    "ja": "GL",
+    "en": "GL",
+    "category": "Tech",
+    "full": "Group Leader",
+    "desc_ja": "グループリーダー。",
+    "desc_en": "Group Leader."
+  },
+  {
+    "target": "MG",
+    "ja": "MG",
+    "en": "MG",
+    "category": "Tech",
+    "full": "Manager",
+    "desc_ja": "マネージャー。",
+    "desc_en": "Manager."
+  },
+  {
+    "target": "GM",
+    "ja": "GM",
+    "en": "GM",
+    "category": "Tech",
+    "full": "General Manager",
+    "desc_ja": "ゼネラルマネージャー。",
+    "desc_en": "General Manager."
+  },
+  {
+    "target": "VP",
+    "ja": "VP",
+    "en": "VP",
+    "category": "Tech",
+    "full": "Vice President",
+    "desc_ja": "副社長/本部長。",
+    "desc_en": "Vice President."
+  },
+  {
+    "target": "MD",
+    "ja": "MD",
+    "en": "MD",
+    "category": "Tech",
+    "full": "Managing Director",
+    "desc_ja": "常務取締役。",
+    "desc_en": "Managing Director."
+  },
+  {
+    "target": "ED",
+    "ja": "ED",
+    "en": "ED",
+    "category": "Tech",
+    "full": "Executive Director",
+    "desc_ja": "専務取締役。",
+    "desc_en": "Executive Director."
+  },
+  {
+    "target": "CD",
+    "ja": "CD",
+    "en": "CD",
+    "category": "Tech",
+    "full": "Creative Director",
+    "desc_ja": "クリエイティブディレクター。",
+    "desc_en": "Creative Director."
+  },
+  {
+    "target": "AD",
+    "ja": "AD",
+    "en": "AD",
+    "category": "Tech",
+    "full": "Art Director",
+    "desc_ja": "アートディレクター。",
+    "desc_en": "Art Director."
+  },
+  {
+    "target": "BD",
+    "ja": "BD",
+    "en": "BD",
+    "category": "Tech",
+    "full": "Business Development",
+    "desc_ja": "事業開発。",
+    "desc_en": "Business Development."
+  },
+  {
+    "target": "SD",
+    "ja": "SD",
+    "en": "SD",
+    "category": "Tech",
+    "full": "System Design",
+    "desc_ja": "システム設計。",
+    "desc_en": "System Design."
+  },
+  {
+    "target": "TD",
+    "ja": "TD",
+    "en": "TD",
+    "category": "Tech",
+    "full": "Technical Director",
+    "desc_ja": "テクニカルディレクター。",
+    "desc_en": "Technical Director."
+  },
+  {
+    "target": "UD",
+    "ja": "UD",
+    "en": "UD",
+    "category": "Tech",
+    "full": "Universal Design",
+    "desc_ja": "ユニバーサルデザイン。",
+    "desc_en": "Universal Design."
+  },
+  {
+    "target": "VD",
+    "ja": "VD",
+    "en": "VD",
+    "category": "Tech",
+    "full": "Visual Design",
+    "desc_ja": "ビジュアルデザイン。",
+    "desc_en": "Visual Design."
+  },
+  {
+    "target": "WD",
+    "ja": "WD",
+    "en": "WD",
+    "category": "Tech",
+    "full": "Web Design",
+    "desc_ja": "Webデザイン。",
+    "desc_en": "Web Design."
+  },
+  {
+    "target": "XD",
+    "ja": "XD",
+    "en": "XD",
+    "category": "Tech",
+    "full": "Experience Design",
+    "desc_ja": "体験設計。",
+    "desc_en": "Experience Design."
+  },
+  {
+    "target": "YD",
+    "ja": "YD",
+    "en": "YD",
+    "category": "Tech",
+    "full": "Yield Design",
+    "desc_ja": "歩留まり設計 (架空)。",
+    "desc_en": "Yield Design (Fictional)."
+  },
+  {
+    "target": "ZD",
+    "ja": "ZD",
+    "en": "ZD",
+    "category": "Tech",
+    "full": "Zero Defect",
+    "desc_ja": "無欠陥。",
+    "desc_en": "Zero Defect."
+  }
 ]

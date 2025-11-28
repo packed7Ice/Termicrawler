@@ -19,11 +19,20 @@ export const TypingInput: React.FC<TypingInputProps> = ({ targetWord, onComplete
     <div className="flex flex-col items-center justify-center p-4">
       <div className="text-xl mb-2 text-terminal-green opacity-70">TYPE TO ATTACK</div>
       <div className={clsx(
-        "text-4xl font-bold font-mono tracking-widest transition-colors duration-100",
+        "font-bold font-mono tracking-widest transition-colors duration-100 break-words text-center max-w-full",
+        targetWord.length > 20 ? "text-lg md:text-xl" : targetWord.length > 12 ? "text-xl md:text-2xl" : "text-2xl md:text-3xl",
         isError ? "text-terminal-red" : "text-terminal-green"
       )}>
-        <span className="text-terminal-yellow">{input}</span>
-        <span className="opacity-50">{targetWord.slice(input.length)}</span>
+        <span className="text-terminal-yellow">
+          {input.split('').map((char, i) => (
+            <span key={i}>{char === ' ' ? '␣' : char}</span>
+          ))}
+        </span>
+        <span className="opacity-50">
+          {targetWord.slice(input.length).split('').map((char, i) => (
+            <span key={i}>{char === ' ' ? '␣' : char}</span>
+          ))}
+        </span>
       </div>
     </div>
   );

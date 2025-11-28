@@ -1,4 +1,4 @@
-export type CellType = 'wall' | 'floor' | 'start' | 'exit';
+export type CellType = 'wall' | 'floor' | 'start' | 'exit' | 'shop';
 
 export interface Position {
   x: number;
@@ -108,6 +108,24 @@ export const DungeonGenerator = {
 
     grid[startPos.y][startPos.x] = 'start';
     grid[exitPos.y][exitPos.x] = 'exit';
+
+    // Place Shop (50% chance)
+    if (random(0, 100) < 50) {
+      // Find a random floor tile that is not start or exit
+      let placed = false;
+      let attempts = 0;
+      while (!placed && attempts < 20) {
+        const r = rooms[random(0, rooms.length - 1)];
+        const rx = random(r.x, r.x + r.w - 1);
+        const ry = random(r.y, r.y + r.h - 1);
+        
+        if (grid[ry][rx] === 'floor') {
+          grid[ry][rx] = 'shop';
+          placed = true;
+        }
+        attempts++;
+      }
+    }
 
     return { width, height, grid, startPos, exitPos, rooms };
   }

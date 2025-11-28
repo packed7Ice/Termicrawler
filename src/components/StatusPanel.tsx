@@ -10,9 +10,10 @@ interface StatusPanelProps {
   level: number;
   exp: number;
   credits: number;
+  atk: number;
 }
 
-export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, en, maxEn, floor, level, exp, credits }) => {
+export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, en, maxEn, floor, level, exp, credits, atk }) => {
   const { t } = useI18n();
 
   const nextLevelExp = Math.floor(50 * Math.pow(1.2, level - 1));
@@ -57,6 +58,10 @@ export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, en, maxEn, 
         </div>
 
         <div className="flex justify-between mt-4 border-t border-terminal-darkGreen pt-2">
+          <span>ATK</span>
+          <span>{atk}</span>
+        </div>
+        <div className="flex justify-between">
           <span>CREDITS</span>
           <span>{credits}</span>
         </div>

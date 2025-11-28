@@ -33,6 +33,7 @@ function App() {
   const [gameState, setGameState] = useState<GameState>('title');
   const [showShop, setShowShop] = useState(false);
   const [showWordFilter, setShowWordFilter] = useState(false);
+  const [exclusionRemaining, setExclusionRemaining] = useState(0);
   // excludedWords is now part of player state (blockedWords)
   
   // Game Data
@@ -40,6 +41,11 @@ function App() {
   const [player, setPlayer] = useState(INITIAL_PLAYER);
   const [dungeon, setDungeon] = useState<DungeonMap | null>(null);
   const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [gameLog, setGameLog] = useState<string[]>(['System initialized.', 'Dungeon generated.']);
+
+  const addLog = (message: string) => {
+    setGameLog(prev => [...prev, message]);
+  };
   
   // Battle Data
   const [battleState, setBattleState] = useState<BattleState | null>(null);
@@ -109,7 +115,13 @@ function App() {
         initDungeon(floor + 1);
       }
 
-      // Random Encounter (10% chance)
+      // Shop check
+      if (dungeon.grid[newY][newX] === 'shop') {
+        setShowShop(true);
+      }
+
+      // Random Encounter (10% chance) - slightly increased from 5%? No, user said "enemies stronger", not "more frequent".
+      // Keeping 5% for now, but maybe user wants more fights? "Stronger" usually means stats.
       if (Math.random() < 0.05) {
         startBattle();
       }
@@ -133,16 +145,16 @@ function App() {
 
     const enemy: Battler = {
       name: `Bug v${floor}.0`,
-      hp: 20 + floor * 10,
-      maxHp: 20 + floor * 10,
-      atk: 5 + floor * 2,
+      hp: 25 + floor * 10, // Nerfed from 30 + floor * 15
+      maxHp: 25 + floor * 10,
+      atk: 6 + floor * 2, // Nerfed from 8 + floor * 3
       isPlayer: false,
       weakLetters: weakLetters
     };
     
     const playerBattler: Battler = {
       ...player,
-      name: 'Player', // Ensure name is set, overwriting if necessary, or just use player.name if it exists
+      name: 'Player',
       isPlayer: true
     };
 
@@ -183,6 +195,7 @@ function App() {
         if (leveledUp) {
           newHp = newMaxHp;
           newEn = newMaxEn;
+          addLog(`LEVEL UP! Lv.${newLevel} (HP+10, EN+5, ATK+2)`);
         } else {
           newHp = Math.min(newMaxHp, newHp + 5);
           newEn = Math.min(newMaxEn, newEn + 2);
@@ -216,7 +229,9 @@ function App() {
         credits: (prev.credits || 0) - cost
       }));
       setShowShop(false);
+      setExclusionRemaining(3); // Allow 3 words
       setShowWordFilter(true);
+      addLog(`Purchased: Word Exclusion x3 (-${cost} CR)`);
       return;
     }
 
@@ -225,17 +240,23 @@ function App() {
       let newHp = prev.hp;
       let newEn = prev.en || 0;
       const newTraits = { ...(prev.traits || {}) };
+      let logMsg = '';
 
       if (itemType === 'item') {
         if (itemId === 'hp_restore') {
           newHp = Math.min(prev.maxHp, newHp + 50);
+          logMsg = 'HP Restore';
         } else if (itemId === 'en_restore') {
           newEn = Math.min(prev.maxEn || 30, newEn + 30);
+          logMsg = 'EN Restore';
         }
       } else if (itemType === 'trait') {
         // Upgrade trait level
         newTraits[itemId] = (newTraits[itemId] || 0) + 1;
+        logMsg = `Trait Upgrade: ${itemId}`;
       }
+
+      if (logMsg) addLog(`Purchased: ${logMsg} (-${cost} CR)`);
 
       return {
         ...prev,
@@ -268,20 +289,35 @@ function App() {
           <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-terminal-black">
             <div className="text-6xl font-bold mb-8 animate-pulse text-terminal-green">TERMICRAWLER</div>
             <div className="space-y-4 w-64">
-              <button onClick={handleStart} className="terminal-btn w-full text-lg py-2">
+              <button 
+                onClick={handleStart} 
+                className="terminal-btn w-full text-lg py-2 focus:outline-none focus:ring-2 focus:ring-terminal-green"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleStart();
+                }}
+              >
                 {t('common.start')}
               </button>
               <button className="terminal-btn w-full text-lg py-2 opacity-50 cursor-not-allowed">
                 {t('common.continue')}
               </button>
             </div>
+            <div className="mt-8 text-sm opacity-50">PRESS ENTER TO START</div>
           </div>
         )}
 
         {gameState === 'gameover' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-terminal-black/90">
             <div className="text-6xl font-bold mb-8 text-terminal-red">CONNECTION LOST</div>
-            <button onClick={() => setGameState('title')} className="terminal-btn text-lg py-2 px-8">
+            <button 
+              onClick={() => setGameState('title')} 
+              className="terminal-btn text-lg py-2 px-8 focus:outline-none focus:ring-2 focus:ring-terminal-green"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setGameState('title');
+              }}
+            >
               REBOOT SYSTEM
             </button>
           </div>
@@ -303,36 +339,28 @@ function App() {
                 />
               )}
 
-              {gameState === 'dungeon' && !showShop && (
-                <div className="absolute bottom-4 right-4">
-                  <button 
-                    onClick={() => setShowShop(true)}
-                    className="terminal-btn px-4 py-2"
-                  >
-                    OPEN SHOP
-                  </button>
-                </div>
-              )}
+              {/* Shop button removed */}
             </div>
 
             <div className="w-80 flex flex-col gap-4">
               <StatusPanel 
                 hp={gameState === 'battle' && battleState ? battleState.player.hp : player.hp} 
                 maxHp={gameState === 'battle' && battleState ? battleState.player.maxHp : player.maxHp} 
-                en={player.en || 30}
-                maxEn={player.maxEn || 30}
+                en={gameState === 'battle' && battleState ? (battleState.player.en || 0) : (player.en || 30)}
+                maxEn={gameState === 'battle' && battleState ? (battleState.player.maxEn || 30) : (player.maxEn || 30)}
                 floor={floor} 
                 level={player.level || 1} 
                 exp={player.exp || 0} 
                 credits={player.credits || 0}
+                atk={player.atk}
               />
               
               <div className="terminal-border p-4 flex-1">
                 <h3 className="border-b border-terminal-green mb-2">LOG</h3>
-                <div className="text-sm opacity-70 space-y-1">
-                  <div>&gt; System initialized.</div>
-                  <div>&gt; Dungeon generated.</div>
-                  {gameState === 'battle' && <div>&gt; Combat mode engaged.</div>}
+                <div className="text-sm opacity-70 space-y-1 h-48 overflow-y-auto scrollbar-thin flex flex-col-reverse">
+                  {gameLog.slice().reverse().map((log, i) => (
+                    <div key={i}>&gt; {log}</div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -350,14 +378,24 @@ function App() {
         {showWordFilter && (
           <WordFilter 
             excludedWords={player.blockedWords || []}
+            remaining={exclusionRemaining}
             onSelectWord={(word) => {
               setPlayer(prev => ({
                 ...prev,
                 blockedWords: [...(prev.blockedWords || []), word]
               }));
-              setShowWordFilter(false);
+              setExclusionRemaining(prev => {
+                const next = prev - 1;
+                if (next <= 0) {
+                  setShowWordFilter(false);
+                }
+                return next;
+              });
             }}
-            onClose={() => setShowWordFilter(false)}
+            onClose={() => {
+              setShowWordFilter(false);
+              setExclusionRemaining(0);
+            }}
           />
         )}
       </main>
