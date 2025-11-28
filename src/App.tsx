@@ -29,14 +29,13 @@ const INITIAL_PLAYER: Battler = {
 };
 
 function App() {
-  const { t } = useI18n();
+  const { t, toggleLanguage } = useI18n();
   const [gameState, setGameState] = useState<GameState>('title');
   const [showShop, setShowShop] = useState(false);
   const [showWordFilter, setShowWordFilter] = useState(false);
+  const [showSystemMenu, setShowSystemMenu] = useState(false);
   const [exclusionRemaining, setExclusionRemaining] = useState(0);
   // excludedWords is now part of player state (blockedWords)
-  
-  // Game Data
   const [floor, setFloor] = useState(1);
   const [player, setPlayer] = useState(INITIAL_PLAYER);
   const [dungeon, setDungeon] = useState<DungeonMap | null>(null);
@@ -69,6 +68,7 @@ function App() {
     setPlayer(data.player);
     initDungeon(data.floor); 
     setGameState('dungeon');
+    setShowSystemMenu(false);
   };
 
   const getCurrentSaveData = (): GameSaveData => ({
@@ -79,11 +79,53 @@ function App() {
     timestamp: Date.now()
   });
 
-  // Movement
-  useEffect(() => {
-    if (gameState !== 'dungeon' || showShop) return;
+  const [selectedTitleIndex, setSelectedTitleIndex] = useState(0);
 
+  // Movement & Global Keys
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // System Menu Toggle
+      if (e.key === 'm' || e.key === 'M') {
+        if (!showShop && !showWordFilter && gameState !== 'battle') {
+          setShowSystemMenu(prev => !prev);
+        }
+        return;
+      }
+
+      // Language Toggle
+      if (e.key === 'l' || e.key === 'L') {
+        if (!showShop && !showWordFilter && !showSystemMenu && gameState !== 'battle') {
+          toggleLanguage();
+        }
+        return;
+      }
+
+      // Title Screen Navigation
+      if (gameState === 'title') {
+        if (e.key === 'ArrowUp') {
+          setSelectedTitleIndex(prev => Math.max(0, prev - 1));
+        } else if (e.key === 'ArrowDown') {
+          setSelectedTitleIndex(prev => Math.min(1, prev + 1));
+        } else if (e.key === 'Enter') {
+          if (selectedTitleIndex === 0) {
+            handleStart();
+          }
+        }
+        return;
+      }
+
+      // Game Over Navigation
+      if (gameState === 'gameover') {
+        if (e.key === 'Enter') {
+          setGameState('title');
+        }
+        return;
+      }
+
+
+
+      if (gameState !== 'dungeon' || showShop || showWordFilter || showSystemMenu) return;
+
       if (!dungeon) return;
 
       let dx = 0;
@@ -120,8 +162,7 @@ function App() {
         setShowShop(true);
       }
 
-      // Random Encounter (10% chance) - slightly increased from 5%? No, user said "enemies stronger", not "more frequent".
-      // Keeping 5% for now, but maybe user wants more fights? "Stronger" usually means stats.
+      // Random Encounter (5% chance)
       if (Math.random() < 0.05) {
         startBattle();
       }
@@ -129,7 +170,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState, dungeon, playerPos, floor, initDungeon, showShop]);
+  }, [gameState, dungeon, playerPos, floor, initDungeon, showShop, showWordFilter, showSystemMenu, selectedTitleIndex]);
 
   const startBattle = () => {
     // Generate 1-3 random weak letters
@@ -291,19 +332,19 @@ function App() {
             <div className="space-y-4 w-64">
               <button 
                 onClick={handleStart} 
-                className="terminal-btn w-full text-lg py-2 focus:outline-none focus:ring-2 focus:ring-terminal-green"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleStart();
-                }}
+                className={`terminal-btn w-full text-lg py-2 focus:outline-none focus:ring-2 focus:ring-terminal-green ${selectedTitleIndex === 0 ? 'bg-terminal-green text-terminal-black ring-2 ring-terminal-green' : ''}`}
+                onMouseEnter={() => setSelectedTitleIndex(0)}
               >
-                {t('common.start')}
+                {selectedTitleIndex === 0 && '> '}{t('common.start')}
               </button>
-              <button className="terminal-btn w-full text-lg py-2 opacity-50 cursor-not-allowed">
-                {t('common.continue')}
+              <button 
+                className={`terminal-btn w-full text-lg py-2 opacity-50 cursor-not-allowed ${selectedTitleIndex === 1 ? 'bg-terminal-green text-terminal-black ring-2 ring-terminal-green' : ''}`}
+                onMouseEnter={() => setSelectedTitleIndex(1)}
+              >
+                {selectedTitleIndex === 1 && '> '}{t('common.continue')}
               </button>
             </div>
-            <div className="mt-8 text-sm opacity-50">PRESS ENTER TO START</div>
+            <div className="mt-8 text-sm opacity-50">PRESS ENTER TO SELECT</div>
           </div>
         )}
 
@@ -336,6 +377,7 @@ function App() {
                   onBattleUpdate={setBattleState}
                   onBattleEnd={handleBattleEnd}
                   excludedWords={player.blockedWords || []}
+                  isPaused={showSystemMenu}
                 />
               )}
 
@@ -400,7 +442,19 @@ function App() {
         )}
       </main>
 
-      <SaveLoadPanel currentData={getCurrentSaveData()} onLoad={handleLoad} />
+      <button 
+        onClick={() => setShowSystemMenu(true)}
+        className="fixed bottom-4 right-4 z-40 terminal-btn text-sm"
+      >
+        SYSTEM [M]
+      </button>
+
+      <SaveLoadPanel 
+        currentData={getCurrentSaveData()} 
+        onLoad={handleLoad} 
+        isOpen={showSystemMenu}
+        onClose={() => setShowSystemMenu(false)}
+      />
     </div>
   );
 }

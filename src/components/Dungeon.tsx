@@ -8,7 +8,7 @@ interface DungeonProps {
 
 export const Dungeon: React.FC<DungeonProps> = ({ map, playerPos }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const CELL_SIZE = 20;
+  const CELL_SIZE = 24;
 
   useEffect(() => {
     const canvas = canvasRef.current;

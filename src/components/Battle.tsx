@@ -19,9 +19,10 @@ interface BattleProps {
   onBattleUpdate: (newState: BattleState) => void;
   onBattleEnd: (winner: 'player' | 'enemy', finalHp: number, finalEn: number) => void;
   excludedWords: string[];
+  isPaused?: boolean;
 }
 
-export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onBattleEnd, excludedWords }) => {
+export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onBattleEnd, excludedWords, isPaused = false }) => {
   const { t, language } = useI18n();
   const [currentWord, setCurrentWord] = useState<WordData | null>(null);
   const [showSkills, setShowSkills] = useState(false);
@@ -57,6 +58,37 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
 
 
 
+  const [selectedSkillIndex, setSelectedSkillIndex] = useState(0);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (battleState.turn !== 'player' || battleState.isFinished) return;
+
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        setShowSkills(prev => !prev);
+        setSelectedSkillIndex(0);
+        return;
+      }
+
+      if (showSkills) {
+        if (e.key === 'Escape') {
+          setShowSkills(false);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          setSelectedSkillIndex(prev => Math.max(0, prev - 1));
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          setSelectedSkillIndex(prev => Math.min(SKILLS.length - 1, prev + 1));
+        } else if (e.key === 'Enter') {
+          const skill = SKILLS[selectedSkillIndex];
+          if (skill) handleSkillUse(skill.id);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [battleState, showSkills, selectedSkillIndex]);
+
   const handleSkillUse = (skillId: string) => {
     const skill = SKILLS.find(s => s.id === skillId);
     if (!skill) return;
@@ -69,7 +101,7 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
   };
 
   return (
-    <div className="w-full max-w-2xl border border-terminal-green bg-terminal-black p-4 relative shadow-[0_0_20px_rgba(0,255,0,0.1)]">
+    <div className="w-full max-w-3xl border border-terminal-green bg-terminal-black p-4 relative shadow-[0_0_20px_rgba(0,255,0,0.1)]">
       {/* Enemy Status */}
       <div className="mb-8 relative">
         <div className="flex justify-between items-end mb-2">
@@ -132,6 +164,7 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
                    onBattleUpdate(nextState);
                    setCurrentWord(getNextWord());
                 }}
+                disabled={isPaused}
               />
               
               <button 
@@ -146,20 +179,30 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
           {showSkills && (
             <div className="w-full grid grid-cols-2 gap-2">
               <div className="col-span-2 flex justify-between items-center mb-2">
-                <span className="font-bold">SELECT SKILL</span>
+                <span className="font-bold">SELECT SKILL [TAB]</span>
                 <button onClick={() => setShowSkills(false)} className="text-sm hover:text-terminal-green/70">[CANCEL]</button>
               </div>
-              {SKILLS.map(skill => {
+              {SKILLS.map((skill, index) => {
                 const canAfford = (battleState.player.en || 0) >= skill.cost;
+                const isSelected = index === selectedSkillIndex;
                 return (
                   <button
                     key={skill.id}
                     onClick={() => handleSkillUse(skill.id)}
                     disabled={!canAfford}
-                    className={`border p-2 text-left flex justify-between items-center ${canAfford ? 'border-terminal-green hover:bg-terminal-green/10' : 'border-gray-700 text-gray-700 cursor-not-allowed'}`}
+                    className={`border p-2 text-left flex justify-between items-center transition-colors ${
+                      isSelected 
+                        ? 'bg-terminal-green text-terminal-black border-terminal-green' 
+                        : canAfford 
+                          ? 'border-terminal-green hover:bg-terminal-green/10' 
+                          : 'border-gray-700 text-gray-700 cursor-not-allowed'
+                    }`}
                   >
                     <div>
-                      <div className="font-bold">{skill.name}</div>
+                      <div className="font-bold">
+                        {isSelected && '> '}
+                        {skill.name}
+                      </div>
                       <div className="text-xs opacity-70">{skill.description}</div>
                     </div>
                     <div className="text-sm">{skill.cost} EN</div>

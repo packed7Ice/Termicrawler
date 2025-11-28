@@ -9,7 +9,7 @@ export const LanguageToggle: React.FC = () => {
       onClick={toggleLanguage}
       className="terminal-btn text-sm fixed top-4 right-4 z-50"
     >
-      Language: {language === 'ja' ? '日本語' : 'English'}
+      Language: {language === 'ja' ? '日本語' : 'English'} [L]
     </button>
   );
 };
