@@ -12,7 +12,7 @@ import { useI18n } from './hooks/useI18n';
 
 type GameState = 'title' | 'dungeon' | 'battle' | 'gameover';
 
-import { GameSaveData } from './utils/storage';
+import { StorageUtils, GameSaveData } from './utils/storage';
 
 const INITIAL_PLAYER: Battler = {
   name: 'Player',
@@ -79,6 +79,31 @@ function App() {
     timestamp: Date.now()
   });
 
+  const [hasSaveData, setHasSaveData] = useState(false);
+
+  useEffect(() => {
+    setHasSaveData(StorageUtils.hasSave());
+  }, []);
+
+  // Auto-save every 30 seconds
+  useEffect(() => {
+    if (gameState !== 'dungeon' && gameState !== 'battle') return;
+
+    const interval = setInterval(() => {
+      StorageUtils.save(getCurrentSaveData());
+      addLog('Game auto-saved.');
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [gameState, floor, player]);
+
+  const handleContinue = () => {
+    const data = StorageUtils.load();
+    if (data) {
+      handleLoad(data);
+    }
+  };
+
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(0);
 
   // Movement & Global Keys
@@ -109,6 +134,8 @@ function App() {
         } else if (e.key === 'Enter') {
           if (selectedTitleIndex === 0) {
             handleStart();
+          } else if (selectedTitleIndex === 1 && hasSaveData) {
+            handleContinue();
           }
         }
         return;
@@ -338,7 +365,9 @@ function App() {
                 {selectedTitleIndex === 0 && '> '}{t('common.start')}
               </button>
               <button 
-                className={`terminal-btn w-full text-lg py-2 opacity-50 cursor-not-allowed ${selectedTitleIndex === 1 ? 'bg-terminal-green text-terminal-black ring-2 ring-terminal-green' : ''}`}
+                onClick={handleContinue}
+                disabled={!hasSaveData}
+                className={`terminal-btn w-full text-lg py-2 ${!hasSaveData ? 'opacity-50 cursor-not-allowed' : ''} ${selectedTitleIndex === 1 ? 'bg-terminal-green text-terminal-black ring-2 ring-terminal-green' : ''}`}
                 onMouseEnter={() => setSelectedTitleIndex(1)}
               >
                 {selectedTitleIndex === 1 && '> '}{t('common.continue')}
