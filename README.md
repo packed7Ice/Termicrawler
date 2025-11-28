@@ -97,8 +97,3 @@ This repository uses GitHub Actions for automatic deployment.
    - **Source**: Deploy from a branch
    - **Branch**: `gh-pages`
    - **Folder**: `/` (root)
-
----
-
-### License
-MIT License
