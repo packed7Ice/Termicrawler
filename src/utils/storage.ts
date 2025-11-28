@@ -1,19 +1,14 @@
 import LZString from 'lz-string';
+import { Battler } from '../systems/battleSystem';
 
 const SAVE_KEY = 'termicrawler_save_v1';
 
 export interface GameSaveData {
   floor: number;
-  player: {
-    hp: number;
-    maxHp: number;
-    atk: number;
-    exp: number;
-    level: number;
-  };
+  player: Battler;
   seed: number;
   settings: {
-    language: 'ja' | 'en';
+    language: string;
   };
   timestamp: number;
 }

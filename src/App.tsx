@@ -5,23 +5,35 @@ import { Dungeon } from './components/Dungeon';
 import { Battle } from './components/Battle';
 import { StatusPanel } from './components/StatusPanel';
 import { LanguageToggle } from './components/LanguageToggle';
+import { Shop } from './components/Shop';
+import { WordFilter } from './components/WordFilter';
 import { SaveLoadPanel } from './components/SaveLoadPanel';
 import { useI18n } from './hooks/useI18n';
-import { GameSaveData } from './utils/storage';
 
 type GameState = 'title' | 'dungeon' | 'battle' | 'gameover';
 
-const INITIAL_PLAYER = {
+import { GameSaveData } from './utils/storage';
+
+const INITIAL_PLAYER: Battler = {
+  name: 'Player',
   hp: 100,
   maxHp: 100,
+  en: 30,
+  maxEn: 30,
   atk: 10,
+  level: 1,
   exp: 0,
-  level: 1
+  credits: 0,
+  isPlayer: true,
+  traits: {}
 };
 
 function App() {
   const { t } = useI18n();
   const [gameState, setGameState] = useState<GameState>('title');
+  const [showShop, setShowShop] = useState(false);
+  const [showWordFilter, setShowWordFilter] = useState(false);
+  const [excludedWords, setExcludedWords] = useState<string[]>([]);
   
   // Game Data
   const [floor, setFloor] = useState(1);
@@ -63,7 +75,7 @@ function App() {
 
   // Movement
   useEffect(() => {
-    if (gameState !== 'dungeon') return;
+    if (gameState !== 'dungeon' || showShop) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!dungeon) return;
@@ -105,20 +117,32 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState, dungeon, playerPos, floor, initDungeon]);
+  }, [gameState, dungeon, playerPos, floor, initDungeon, showShop]);
 
   const startBattle = () => {
+    // Generate 1-3 random weak letters
+    const possibleLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const weakLettersCount = Math.floor(Math.random() * 3) + 1;
+    const weakLetters: string[] = [];
+    for (let i = 0; i < weakLettersCount; i++) {
+      const char = possibleLetters[Math.floor(Math.random() * possibleLetters.length)];
+      if (!weakLetters.includes(char)) {
+        weakLetters.push(char);
+      }
+    }
+
     const enemy: Battler = {
       name: `Bug v${floor}.0`,
       hp: 20 + floor * 10,
       maxHp: 20 + floor * 10,
       atk: 5 + floor * 2,
-      isPlayer: false
+      isPlayer: false,
+      weakLetters: weakLetters
     };
     
     const playerBattler: Battler = {
-      name: 'Player',
       ...player,
+      name: 'Player', // Ensure name is set, overwriting if necessary, or just use player.name if it exists
       isPlayer: true
     };
 
@@ -130,16 +154,18 @@ function App() {
     return Math.floor(50 * Math.pow(1.2, level - 1));
   };
 
-  const handleBattleEnd = (winner: 'player' | 'enemy', finalHp: number) => {
+  const handleBattleEnd = (winner: 'player' | 'enemy', finalHp: number, finalEn: number) => {
     if (winner === 'player') {
       const expGain = 10 + (floor * 2);
       
       setPlayer(prev => {
-        let newExp = prev.exp + expGain;
-        let newLevel = prev.level;
+        let newExp = (prev.exp || 0) + expGain;
+        let newLevel = prev.level || 1;
         let newMaxHp = prev.maxHp;
+        let newMaxEn = prev.maxEn || 30;
         let newAtk = prev.atk;
-        let newHp = finalHp; // Use the HP from the end of battle
+        let newHp = finalHp;
+        let newEn = finalEn;
         let leveledUp = false;
 
         let nextLevelExp = getNextLevelExp(newLevel);
@@ -148,30 +174,66 @@ function App() {
           newExp -= nextLevelExp;
           newLevel++;
           newMaxHp += 10;
+          newMaxEn += 5;
           newAtk += 2;
           leveledUp = true;
           nextLevelExp = getNextLevelExp(newLevel);
         }
 
         if (leveledUp) {
-          newHp = newMaxHp; // Full heal on level up
+          newHp = newMaxHp;
+          newEn = newMaxEn;
         } else {
-          newHp = Math.min(newMaxHp, newHp + 5); // Small heal (5) after battle if not leveling up
+          newHp = Math.min(newMaxHp, newHp + 5);
+          newEn = Math.min(newMaxEn, newEn + 2);
         }
 
         return {
           ...prev,
           hp: newHp,
           maxHp: newMaxHp,
+          en: newEn,
+          maxEn: newMaxEn,
           atk: newAtk,
           level: newLevel,
-          exp: newExp
+          exp: newExp,
+          credits: (prev.credits || 0) + 10 + (floor * 5)
         };
       });
       setGameState('dungeon');
     } else {
       setGameState('gameover');
     }
+  };
+
+  const handlePurchase = (cost: number, itemType: string, itemId: string) => {
+    setPlayer(prev => {
+      if ((prev.credits || 0) < cost) return prev; // Not enough credits
+
+      const newCredits = (prev.credits || 0) - cost;
+      let newHp = prev.hp;
+      let newEn = prev.en || 0;
+      const newTraits = { ...(prev.traits || {}) };
+
+      if (itemType === 'item') {
+        if (itemId === 'hp_restore') {
+          newHp = Math.min(prev.maxHp, newHp + 50);
+        } else if (itemId === 'en_restore') {
+          newEn = Math.min(prev.maxEn || 30, newEn + 30);
+        }
+      } else if (itemType === 'trait') {
+        // Upgrade trait level
+        newTraits[itemId] = (newTraits[itemId] || 0) + 1;
+      }
+
+      return {
+        ...prev,
+        hp: newHp,
+        en: newEn,
+        credits: newCredits,
+        traits: newTraits
+      };
+    });
   };
 
   return (
@@ -185,6 +247,14 @@ function App() {
           </h1>
         </div>
         <div className="text-xs opacity-70 text-right mt-1">SYSTEM: ONLINE</div>
+        <div className="absolute top-0 right-0 mt-2 mr-2 flex gap-2">
+          <button 
+            onClick={() => setShowWordFilter(true)}
+            className="text-xs border border-terminal-green px-2 py-1 hover:bg-terminal-green hover:text-terminal-black transition-colors"
+          >
+            FILTER
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 flex gap-4 relative">
@@ -223,7 +293,19 @@ function App() {
                   battleState={battleState} 
                   onBattleUpdate={setBattleState}
                   onBattleEnd={handleBattleEnd}
+                  excludedWords={excludedWords}
                 />
+              )}
+
+              {gameState === 'dungeon' && !showShop && (
+                <div className="absolute bottom-4 right-4">
+                  <button 
+                    onClick={() => setShowShop(true)}
+                    className="terminal-btn px-4 py-2"
+                  >
+                    OPEN SHOP
+                  </button>
+                </div>
               )}
             </div>
 
@@ -231,9 +313,12 @@ function App() {
               <StatusPanel 
                 hp={gameState === 'battle' && battleState ? battleState.player.hp : player.hp} 
                 maxHp={gameState === 'battle' && battleState ? battleState.player.maxHp : player.maxHp} 
+                en={player.en || 30}
+                maxEn={player.maxEn || 30}
                 floor={floor} 
-                level={player.level} 
-                exp={player.exp} 
+                level={player.level || 1} 
+                exp={player.exp || 0} 
+                credits={player.credits || 0}
               />
               
               <div className="terminal-border p-4 flex-1">
@@ -246,6 +331,22 @@ function App() {
               </div>
             </div>
           </>
+        )}
+
+        {showShop && (
+          <Shop 
+            credits={player.credits || 0} 
+            onClose={() => setShowShop(false)}
+            onPurchase={handlePurchase}
+          />
+        )}
+
+        {showWordFilter && (
+          <WordFilter 
+            excludedWords={excludedWords}
+            onUpdateExcludedWords={setExcludedWords}
+            onClose={() => setShowWordFilter(false)}
+          />
         )}
       </main>
 

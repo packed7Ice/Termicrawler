@@ -34,6 +34,10 @@ export const en = {
     typing: 'Input Command:',
     defeated: 'Defeated {name}!',
     playerDefeated: 'Player was defeated...',
+    critical: 'Critical Hit!',
+    traitHeal: 'Recovered {{amount}} HP!',
+    traitEn: 'Recovered {{amount}} EN!',
+    weakHit: 'Weakness Hit! x{{count}} (+{{bonus}} DMG)'
   },
   dungeon: {
     enter: 'Starting dungeon exploration...',

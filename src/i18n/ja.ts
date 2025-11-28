@@ -34,6 +34,10 @@ export const ja = {
     typing: 'コマンドを入力せよ:',
     defeated: '{name} を撃破した！',
     playerDefeated: 'プレイヤーは倒れた...',
+    critical: 'クリティカルヒット！',
+    traitHeal: 'HPが{{amount}}回復した！',
+    traitEn: 'ENが{{amount}}回復した！',
+    weakHit: '弱点ヒット！ x{{count}} (+{{bonus}}ダメージ)'
   },
   dungeon: {
     enter: 'ダンジョン探索を開始します...',

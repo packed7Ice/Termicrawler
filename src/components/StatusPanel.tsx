@@ -4,12 +4,15 @@ import { useI18n } from '../hooks/useI18n';
 interface StatusPanelProps {
   hp: number;
   maxHp: number;
+  en: number;
+  maxEn: number;
   floor: number;
   level: number;
   exp: number;
+  credits: number;
 }
 
-export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, floor, level, exp }) => {
+export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, en, maxEn, floor, level, exp, credits }) => {
   const { t } = useI18n();
 
   const nextLevelExp = Math.floor(50 * Math.pow(1.2, level - 1));
@@ -26,22 +29,39 @@ export const StatusPanel: React.FC<StatusPanelProps> = ({ hp, maxHp, floor, leve
           <span>{t('status.level')}</span>
           <span>{level}</span>
         </div>
+        
+        {/* HP */}
         <div className="flex justify-between">
           <span>{t('status.hp')}</span>
           <span className={hp < maxHp * 0.3 ? 'text-terminal-red animate-pulse' : ''}>
             {hp}/{maxHp}
           </span>
         </div>
-        
-        {/* HP Bar */}
-        <div className="w-full h-2 bg-terminal-darkGreen mt-1 border border-terminal-green">
+        <div className="w-full h-2 bg-terminal-darkGreen mt-1 border border-terminal-green mb-2">
           <div 
             className="h-full bg-terminal-green transition-all duration-300"
             style={{ width: `${(hp / maxHp) * 100}%` }}
           />
         </div>
 
-        <div className="flex justify-between mt-4">
+        {/* EN */}
+        <div className="flex justify-between">
+          <span>EN</span>
+          <span>{en}/{maxEn}</span>
+        </div>
+        <div className="w-full h-2 bg-terminal-darkGreen mt-1 border border-terminal-green">
+          <div 
+            className="h-full bg-terminal-blue transition-all duration-300"
+            style={{ width: `${(en / maxEn) * 100}%` }}
+          />
+        </div>
+
+        <div className="flex justify-between mt-4 border-t border-terminal-darkGreen pt-2">
+          <span>CREDITS</span>
+          <span>{credits}</span>
+        </div>
+
+        <div className="flex justify-between mt-2">
           <span>{t('status.exp')}</span>
           <span>{exp} / {nextLevelExp}</span>
         </div>
