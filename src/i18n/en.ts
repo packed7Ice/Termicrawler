@@ -1,0 +1,40 @@
+export const en = {
+  common: {
+    title: 'Termicrawler',
+    start: 'Initialize Connection (Start)',
+    continue: 'Resume Connection (Continue)',
+    language: 'Language',
+    loading: 'Loading...',
+    error: 'An error occurred',
+    back: 'Back',
+    save: 'Save',
+    load: 'Load',
+    export: 'Export Save',
+    import: 'Import Save',
+    copy: 'Copy',
+    copied: 'Copied',
+    paste: 'Paste',
+    importSuccess: 'Import Successful',
+    importFail: 'Import Failed',
+    close: 'Close',
+  },
+  status: {
+    hp: 'Integrity (HP)',
+    atk: 'Attack (ATK)',
+    floor: 'Depth (FLOOR)',
+    level: 'Level (LV)',
+    exp: 'Experience (EXP)',
+  },
+  battle: {
+    encounter: 'Hostile program encountered!',
+    playerAttack: 'Execute Attack Command: {damage} damage',
+    enemyAttack: 'Enemy Attack: {damage} damage',
+    win: 'Threat eliminated.',
+    lose: 'Connection lost...',
+    typing: 'Input Command:',
+  },
+  dungeon: {
+    enter: 'Starting dungeon exploration...',
+    floor: 'Depth {floor}',
+  }
+};

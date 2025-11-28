@@ -1,0 +1,40 @@
+export const ja = {
+  common: {
+    title: 'Termicrawler',
+    start: '接続開始 (Start)',
+    continue: '接続再開 (Continue)',
+    language: '言語 (Language)',
+    loading: '読み込み中...',
+    error: 'エラーが発生しました',
+    back: '戻る',
+    save: '保存',
+    load: 'ロード',
+    export: 'セーブデータ出力',
+    import: 'セーブデータ入力',
+    copy: 'コピー',
+    copied: 'コピーしました',
+    paste: '貼り付け',
+    importSuccess: 'インポート成功',
+    importFail: 'インポート失敗',
+    close: '閉じる',
+  },
+  status: {
+    hp: '耐久値 (HP)',
+    atk: '攻撃力 (ATK)',
+    floor: '深度 (FLOOR)',
+    level: 'レベル (LV)',
+    exp: '経験値 (EXP)',
+  },
+  battle: {
+    encounter: '敵性プログラムに遭遇！',
+    playerAttack: '攻撃コマンド実行: {damage} ダメージ',
+    enemyAttack: '敵の攻撃: {damage} ダメージ',
+    win: '脅威を排除した。',
+    lose: '接続が切断されました...',
+    typing: 'コマンドを入力せよ:',
+  },
+  dungeon: {
+    enter: 'ダンジョン探索を開始します...',
+    floor: '地下 {floor} 階層',
+  }
+};
