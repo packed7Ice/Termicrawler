@@ -8,7 +8,7 @@ interface I18nContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -20,7 +20,7 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLanguage(prev => prev === 'ja' ? 'en' : 'ja');
   };
 
-  const t = (key: string): string => {
+  const t = (key: string, params?: Record<string, string | number>): string => {
     const keys = key.split('.');
     let value: any = language === 'ja' ? ja : en;
     
@@ -31,7 +31,14 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return key;
       }
     }
-    return value as string;
+
+    let text = value as string;
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        text = text.replace(`{${k}}`, String(v));
+      });
+    }
+    return text;
   };
 
   return (

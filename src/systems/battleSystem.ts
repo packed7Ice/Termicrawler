@@ -6,11 +6,16 @@ export interface Battler {
   isPlayer: boolean;
 }
 
+export interface LogEntry {
+  key: string;
+  params?: Record<string, string | number>;
+}
+
 export interface BattleState {
   player: Battler;
   enemy: Battler;
   turn: 'player' | 'enemy';
-  log: string[];
+  log: LogEntry[];
   isFinished: boolean;
   winner?: 'player' | 'enemy';
 }
@@ -21,14 +26,14 @@ export const BattleSystem = {
       player,
       enemy,
       turn: 'player',
-      log: [`Encountered ${enemy.name}!`],
+      log: [{ key: 'battle.encounter', params: { name: enemy.name } }],
       isFinished: false
     };
   },
 
   executePlayerAttack: (state: BattleState, damage: number): BattleState => {
     const newEnemyHp = Math.max(0, state.enemy.hp - damage);
-    const newLog = [...state.log, `Player attacks! Dealt ${damage} damage.`];
+    const newLog = [...state.log, { key: 'battle.playerAttack', params: { damage } }];
     
     let isFinished = false;
     let winner: 'player' | 'enemy' | undefined;
@@ -36,7 +41,7 @@ export const BattleSystem = {
     if (newEnemyHp === 0) {
       isFinished = true;
       winner = 'player';
-      newLog.push(`${state.enemy.name} was defeated!`);
+      newLog.push({ key: 'battle.defeated', params: { name: state.enemy.name } });
     }
 
     return {
@@ -53,7 +58,7 @@ export const BattleSystem = {
     // Simple AI: Attack
     const damage = Math.floor(state.enemy.atk * (0.8 + Math.random() * 0.4));
     const newPlayerHp = Math.max(0, state.player.hp - damage);
-    const newLog = [...state.log, `${state.enemy.name} attacks! Dealt ${damage} damage.`];
+    const newLog = [...state.log, { key: 'battle.enemyAttack', params: { name: state.enemy.name, damage } }];
 
     let isFinished = false;
     let winner: 'player' | 'enemy' | undefined;
@@ -61,7 +66,7 @@ export const BattleSystem = {
     if (newPlayerHp === 0) {
       isFinished = true;
       winner = 'enemy';
-      newLog.push(`Player was defeated...`);
+      newLog.push({ key: 'battle.playerDefeated' });
     }
 
     return {

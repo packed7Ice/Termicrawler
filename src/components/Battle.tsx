@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BattleState, BattleSystem } from '../systems/battleSystem';
 import { TypingInput } from './TypingInput';
 import { useI18n } from '../hooks/useI18n';
-import words from '../data/words.json';
+import wordsData from '../data/words.json';
+
+interface WordData {
+  target: string;
+  ja: string;
+  en: string;
+}
 
 interface BattleProps {
   battleState: BattleState;
@@ -11,20 +17,20 @@ interface BattleProps {
 }
 
 export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onBattleEnd }) => {
-  const { t } = useI18n();
-  const [targetWord, setTargetWord] = useState('');
+  const { t, language } = useI18n();
+  const [currentWord, setCurrentWord] = useState<WordData | null>(null);
 
   // Pick a random word
-  const getNextWord = () => {
-    const idx = Math.floor(Math.random() * words.length);
-    return words[idx];
+  const getNextWord = (): WordData => {
+    const idx = Math.floor(Math.random() * wordsData.length);
+    return wordsData[idx];
   };
 
   useEffect(() => {
-    if (!targetWord) {
-      setTargetWord(getNextWord());
+    if (!currentWord) {
+      setCurrentWord(getNextWord());
     }
-  }, [targetWord]);
+  }, [currentWord]);
 
   useEffect(() => {
     if (battleState.isFinished && battleState.winner) {
@@ -41,13 +47,13 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
   }, [battleState, onBattleEnd, onBattleUpdate]);
 
   const handleTypingComplete = () => {
-    if (battleState.turn !== 'player') return;
+    if (battleState.turn !== 'player' || !currentWord) return;
 
     // Calculate damage based on word length (simple logic)
-    const damage = Math.floor(battleState.player.atk * (1 + targetWord.length * 0.1));
+    const damage = Math.floor(battleState.player.atk * (1 + currentWord.target.length * 0.1));
     const nextState = BattleSystem.executePlayerAttack(battleState, damage);
     onBattleUpdate(nextState);
-    setTargetWord(getNextWord());
+    setCurrentWord(getNextWord());
   };
 
   return (
@@ -68,16 +74,23 @@ export const Battle: React.FC<BattleProps> = ({ battleState, onBattleUpdate, onB
         </div>
 
         <div className="h-32 overflow-y-auto border-t border-b border-terminal-darkGreen py-2 mb-4 font-mono text-sm space-y-1 scrollbar-thin">
+        <div className="h-32 overflow-y-auto border-t border-b border-terminal-darkGreen py-2 mb-4 font-mono text-sm space-y-1 scrollbar-thin">
           {battleState.log.slice().reverse().map((log, i) => (
-            <div key={i} className="opacity-80">&gt; {log}</div>
+            <div key={i} className="opacity-80">&gt; {t(log.key, log.params)}</div>
           ))}
         </div>
+        </div>
 
-        {battleState.turn === 'player' && !battleState.isFinished && (
-          <TypingInput 
-            targetWord={targetWord}
-            onComplete={handleTypingComplete}
-          />
+        {battleState.turn === 'player' && !battleState.isFinished && currentWord && (
+          <div className="flex flex-col items-center">
+            <div className="text-terminal-green opacity-70 mb-1 text-lg">
+              {language === 'ja' ? currentWord.ja : currentWord.en}
+            </div>
+            <TypingInput 
+              targetWord={currentWord.target}
+              onComplete={handleTypingComplete}
+            />
+          </div>
         )}
 
         {battleState.turn === 'enemy' && (

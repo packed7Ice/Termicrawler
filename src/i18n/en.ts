@@ -26,12 +26,14 @@ export const en = {
     exp: 'Experience',
   },
   battle: {
-    encounter: 'Hostile program encountered!',
-    playerAttack: 'Execute Attack Command: {damage} damage',
-    enemyAttack: 'Enemy Attack: {damage} damage',
+    encounter: 'Encountered {name}!',
+    playerAttack: 'Execute Attack: {damage} damage',
+    enemyAttack: '{name} attacks: {damage} damage',
     win: 'Threat eliminated.',
     lose: 'Connection lost...',
     typing: 'Input Command:',
+    defeated: 'Defeated {name}!',
+    playerDefeated: 'Player was defeated...',
   },
   dungeon: {
     enter: 'Starting dungeon exploration...',

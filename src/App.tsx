@@ -143,11 +143,13 @@ function App() {
     <div className="min-h-screen bg-terminal-black text-terminal-green p-4 flex flex-col font-mono selection:bg-terminal-green selection:text-terminal-black">
       <LanguageToggle />
       
-      <header className="mb-4 flex justify-between items-end border-b border-terminal-darkGreen pb-2">
-        <h1 className="text-3xl font-bold tracking-tighter">
-          TERMICRAWLER <span className="text-xs font-normal opacity-50">v1.0.0</span>
-        </h1>
-        <div className="text-xs opacity-70">SYSTEM: ONLINE</div>
+      <header className="mb-4 border-b border-terminal-darkGreen pb-2">
+        <div className="flex justify-between items-end">
+          <h1 className="text-5xl font-bold tracking-tighter">
+            TERMICRAWLER <span className="text-sm font-normal opacity-50">v1.0.0</span>
+          </h1>
+        </div>
+        <div className="text-xs opacity-70 text-right mt-1">SYSTEM: ONLINE</div>
       </header>
 
       <main className="flex-1 flex gap-4 relative">

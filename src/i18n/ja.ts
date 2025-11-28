@@ -26,12 +26,14 @@ export const ja = {
     exp: '経験値',
   },
   battle: {
-    encounter: '敵性プログラムに遭遇！',
-    playerAttack: '攻撃コマンド実行: {damage} ダメージ',
-    enemyAttack: '敵の攻撃: {damage} ダメージ',
+    encounter: '{name} に遭遇！',
+    playerAttack: '攻撃実行: {damage} ダメージ',
+    enemyAttack: '{name} の攻撃: {damage} ダメージ',
     win: '脅威を排除した。',
     lose: '接続が切断されました...',
     typing: 'コマンドを入力せよ:',
+    defeated: '{name} を撃破した！',
+    playerDefeated: 'プレイヤーは倒れた...',
   },
   dungeon: {
     enter: 'ダンジョン探索を開始します...',
