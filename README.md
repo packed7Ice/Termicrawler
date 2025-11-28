@@ -84,7 +84,3 @@ npm run build
 ### Deployment
 Run `npm run build` to generate static files in the `dist` folder. Deploy these files to GitHub Pages or any static hosting service.
 
----
-
-### License
-MIT License
