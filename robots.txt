@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://packed7Ice.github.io/Termicrawler/sitemap.xml
