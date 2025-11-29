@@ -49,9 +49,27 @@ function App() {
   const addLog = (message: string) => {
     setGameLog(prev => [...prev, message]);
   };
-  
-  // Battle Data
-  const [battleState, setBattleState] = useState<BattleState | null>(null);
+
+  const getCurrentSaveData = (): GameSaveData => ({
+    floor,
+    player,
+    seed: Date.now(),
+    settings: { language: 'ja' },
+    timestamp: Date.now(),
+    direction,
+    visited: Array.from(visited),
+    userName,
+    dungeon: dungeon || undefined,
+    playerPos
+  });
+
+  // Save Helper
+  const saveGame = (overrides?: Partial<GameSaveData>) => {
+    const currentData = getCurrentSaveData();
+    const dataToSave = { ...currentData, ...overrides };
+    StorageUtils.save(dataToSave);
+    addLog('Game saved.');
+  };
 
   // Init Dungeon
   const initDungeon = useCallback((level: number, savedSeed?: number) => {
@@ -61,13 +79,13 @@ function App() {
     setPlayerPos(map.startPos);
     setFloor(level);
     setDirection(0);
-    // Keep visited if same floor? No, reset for new floor usually.
-    // But if loading, we might want to restore.
-    // For now, reset visited on new floor generation unless loading (handled separately)
-    if (!savedSeed) {
-      setVisited(new Set([`${map.startPos.x},${map.startPos.y}`]));
-    }
+    setVisited(new Set([`${map.startPos.x},${map.startPos.y}`]));
   }, []);
+
+
+
+  // Battle Data
+  const [battleState, setBattleState] = useState<BattleState | null>(null);
 
   const handleStart = () => {
     setPlayer(INITIAL_PLAYER);
@@ -78,43 +96,25 @@ function App() {
   const handleLoad = (data: GameSaveData) => {
     setFloor(data.floor);
     setPlayer(data.player);
-    initDungeon(data.floor, data.seed); 
+    
+    if (data.dungeon) {
+      setDungeon(data.dungeon);
+      if (data.playerPos) {
+        setPlayerPos(data.playerPos);
+      } else {
+        setPlayerPos(data.dungeon.startPos);
+      }
+    } else {
+      initDungeon(data.floor, data.seed); 
+    }
+
     setGameState('dungeon');
     setShowSystemMenu(false);
     
     if (data.direction !== undefined) setDirection(data.direction as Direction);
     if (data.visited) setVisited(new Set(data.visited));
     if (data.userName) setUserName(data.userName);
-    
-    // Restore player pos? DungeonGenerator sets startPos by default.
-    // We need to save/load playerPos too!
-    // Oops, playerPos was missing in GameSaveData in my previous thought, 
-    // but looking at original code, it wasn't there either?
-    // Wait, original code: setPlayerPos(map.startPos) in initDungeon.
-    // If we load, we regenerate dungeon. 
-    // The original code didn't save playerPos explicitly? 
-    // Let's check `getCurrentSaveData` in original code.
-    // It had `floor`, `player`, `seed`.
-    // It seems original code reset position to start on load? That's a bug or feature.
-    // I should probably add playerPos to save data.
-    // For now, I'll stick to original behavior or fix it if I can.
-    // Let's add playerPos to save data logic below.
   };
-
-  const getCurrentSaveData = (): GameSaveData => ({
-    floor,
-    player,
-    seed: Date.now(), // This is wrong in original code too if we want to restore exact dungeon. 
-    // But original code used Date.now() + level for generation.
-    // If we want to save, we should save the seed used for generation.
-    // But I don't have the current seed stored in state.
-    // I'll leave it as is for now to avoid breaking too much, but ideally we store `dungeonSeed`.
-    settings: { language: 'ja' },
-    timestamp: Date.now(),
-    direction,
-    visited: Array.from(visited),
-    userName
-  });
 
   const [hasSaveData, setHasSaveData] = useState(false);
 
@@ -127,8 +127,7 @@ function App() {
     if (gameState !== 'dungeon' && gameState !== 'battle') return;
 
     const interval = setInterval(() => {
-      StorageUtils.save(getCurrentSaveData());
-      addLog('Game auto-saved.');
+      saveGame();
     }, 30000);
 
     return () => clearInterval(interval);
@@ -172,7 +171,32 @@ function App() {
     // Exit check
     if (cell === 'exit') {
       addLog("Found stairs! Descending...");
-      setTimeout(() => initDungeon(floor + 1), 500);
+      setTimeout(() => {
+         const nextFloor = floor + 1;
+         const nextSeed = Date.now() + nextFloor;
+         
+         // Generate new state explicitly to avoid race conditions with auto-save
+         const nextMap = DungeonGenerator.generate(30, 20, nextSeed);
+         const nextStartPos = nextMap.startPos;
+         const nextVisited = [`${nextStartPos.x},${nextStartPos.y}`];
+         
+         // Update State
+         setDungeon(nextMap);
+         setPlayerPos(nextStartPos);
+         setFloor(nextFloor);
+         setDirection(0);
+         setVisited(new Set(nextVisited));
+         
+         // Auto-save with explicit new data
+         saveGame({ 
+            floor: nextFloor, 
+            seed: nextSeed,
+            dungeon: nextMap,
+            playerPos: nextStartPos,
+            visited: nextVisited,
+            direction: 0
+         });
+      }, 500);
     }
 
     // Shop check
@@ -399,50 +423,55 @@ function App() {
          }
       }
 
-      setPlayer((prev: Battler) => {
-        let newExp = (prev.exp || 0) + expGain;
-        let newLevel = prev.level || 1;
-        let newMaxHp = prev.maxHp;
-        let newMaxEn = prev.maxEn || 30;
-        let newAtk = prev.atk;
-        let newHp = finalHp;
-        let newEn = finalEn;
-        let leveledUp = false;
+      // Calculate new player state
+      let newExp = (player.exp || 0) + expGain;
+      let newLevel = player.level || 1;
+      let newMaxHp = player.maxHp;
+      let newMaxEn = player.maxEn || 30;
+      let newAtk = player.atk;
+      let newHp = finalHp;
+      let newEn = finalEn;
+      let leveledUp = false;
 
-        let nextLevelExp = getNextLevelExp(newLevel);
+      let nextLevelExp = getNextLevelExp(newLevel);
 
-        while (newExp >= nextLevelExp) {
-          newExp -= nextLevelExp;
-          newLevel++;
-          newMaxHp += 10;
-          newMaxEn += 5;
-          newAtk += 2;
-          leveledUp = true;
-          nextLevelExp = getNextLevelExp(newLevel);
-        }
+      while (newExp >= nextLevelExp) {
+        newExp -= nextLevelExp;
+        newLevel++;
+        newMaxHp += 10;
+        newMaxEn += 5;
+        newAtk += 2;
+        leveledUp = true;
+        nextLevelExp = getNextLevelExp(newLevel);
+      }
 
-        if (leveledUp) {
-          newHp = newMaxHp;
-          newEn = newMaxEn;
-          addLog(`LEVEL UP! Lv.${newLevel} (HP+10, EN+5, ATK+2)`);
-        } else {
-          newHp = Math.min(newMaxHp, newHp + 5);
-          newEn = Math.min(newMaxEn, newEn + 2);
-        }
+      if (leveledUp) {
+        newHp = newMaxHp;
+        newEn = newMaxEn;
+        addLog(`LEVEL UP! Lv.${newLevel} (HP+10, EN+5, ATK+2)`);
+      } else {
+        newHp = Math.min(newMaxHp, newHp + 5);
+        newEn = Math.min(newMaxEn, newEn + 2);
+      }
 
-        return {
-          ...prev,
-          hp: newHp,
-          maxHp: newMaxHp,
-          en: newEn,
-          maxEn: newMaxEn,
-          atk: newAtk,
-          level: newLevel,
-          exp: newExp,
-          credits: (prev.credits || 0) + 10 + (floor * 5)
-        };
-      });
+      const newPlayer: Battler = {
+        ...player,
+        hp: newHp,
+        maxHp: newMaxHp,
+        en: newEn,
+        maxEn: newMaxEn,
+        atk: newAtk,
+        level: newLevel,
+        exp: newExp,
+        credits: (player.credits || 0) + 10 + (floor * 5)
+      };
+
+      setPlayer(newPlayer);
       setGameState('dungeon');
+      
+      // Auto-save after battle
+      saveGame({ player: newPlayer });
+      
     } else {
       setGameState('gameover');
     }
@@ -625,7 +654,10 @@ function App() {
         {showShop && (
           <Shop 
             credits={player.credits || 0} 
-            onClose={() => setShowShop(false)}
+            onClose={() => {
+               setShowShop(false);
+               saveGame();
+            }}
             onPurchase={handlePurchase}
           />
         )}

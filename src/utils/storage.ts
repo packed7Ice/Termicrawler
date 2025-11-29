@@ -1,5 +1,6 @@
 import LZString from 'lz-string';
 import { Battler } from '../systems/battleSystem';
+import { DungeonMap } from '../systems/dungeonGenerator';
 
 const SAVE_KEY = 'termicrawler_save_v1';
 
@@ -15,6 +16,8 @@ export interface GameSaveData {
   direction?: number; // 0-3
   visited?: string[]; // Array of "x,y" strings
   userName?: string;
+  dungeon?: DungeonMap;
+  playerPos?: { x: number, y: number };
 }
 
 export const StorageUtils = {
