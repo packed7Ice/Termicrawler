@@ -438,7 +438,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-terminal-black text-terminal-green p-4 flex flex-col font-mono selection:bg-terminal-green selection:text-terminal-black">
+    <div className="h-screen overflow-hidden bg-terminal-black text-terminal-green p-4 flex flex-col font-mono selection:bg-terminal-green selection:text-terminal-black">
       <LanguageToggle />
       
       <header className="mb-2 border-b border-terminal-darkGreen pb-2">
@@ -532,7 +532,7 @@ function App() {
             </div>
 
             {/* Sidebar */}
-            <div className="w-80 flex flex-col gap-4">
+            <div className="w-80 flex flex-col gap-4 h-full overflow-hidden">
               {/* Mini Map */}
               {gameState === 'dungeon' && dungeon && (
                 <div className="h-48 border border-terminal-darkGreen p-2 flex items-center justify-center bg-black">

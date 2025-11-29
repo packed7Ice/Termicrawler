@@ -11,7 +11,7 @@ interface DungeonProps {
 
 export const Dungeon = ({ map, playerPos, visited, direction }: DungeonProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const CELL_SIZE = 12; // Smaller for minimap
+  const CELL_SIZE = 8; // Smaller for minimap
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -79,9 +79,10 @@ export const Dungeon = ({ map, playerPos, visited, direction }: DungeonProps) =>
     
     ctx.fillStyle = '#00ff00';
     ctx.beginPath();
-    ctx.moveTo(6, 0);
-    ctx.lineTo(-4, -4);
-    ctx.lineTo(-4, 4);
+    const arrowSize = CELL_SIZE / 2;
+    ctx.moveTo(arrowSize, 0);
+    ctx.lineTo(-arrowSize * 0.6, -arrowSize * 0.6);
+    ctx.lineTo(-arrowSize * 0.6, arrowSize * 0.6);
     ctx.closePath();
     ctx.fill();
     
