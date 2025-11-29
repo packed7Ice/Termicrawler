@@ -11,7 +11,7 @@ interface DungeonProps {
 
 export const Dungeon = ({ map, playerPos, visited, direction }: DungeonProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const CELL_SIZE = 8; // Smaller for minimap
+  const CELL_SIZE = 10; // Smaller for minimap
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -91,13 +91,11 @@ export const Dungeon = ({ map, playerPos, visited, direction }: DungeonProps) =>
   }, [map, playerPos, visited, direction]);
 
   return (
-    <div className="terminal-border inline-block">
-      <canvas 
-        ref={canvasRef} 
-        width={map.width * CELL_SIZE} 
-        height={map.height * CELL_SIZE}
-        className="block"
-      />
-    </div>
+    <canvas 
+      ref={canvasRef} 
+      width={map.width * CELL_SIZE} 
+      height={map.height * CELL_SIZE}
+      className="block"
+    />
   );
 };

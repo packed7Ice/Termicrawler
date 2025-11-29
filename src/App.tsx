@@ -147,9 +147,78 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Shared Movement Logic
+  const movePlayer = (dx: number, dy: number) => {
+    if (!dungeon) return;
+
+    const newX = playerPos.x + dx;
+    const newY = playerPos.y + dy;
+
+    // Wall collision
+    if (
+      newX < 0 || newX >= dungeon.width ||
+      newY < 0 || newY >= dungeon.height ||
+      dungeon.grid[newY][newX] === 'wall'
+    ) {
+      addLog("Ouch! Hit a wall.");
+      return;
+    }
+
+    setPlayerPos({ x: newX, y: newY });
+    setVisited(prev => new Set(prev).add(`${newX},${newY}`));
+
+    const cell = dungeon.grid[newY][newX];
+
+    // Exit check
+    if (cell === 'exit') {
+      addLog("Found stairs! Descending...");
+      setTimeout(() => initDungeon(floor + 1), 500);
+    }
+
+    // Shop check
+    if (cell === 'shop') {
+      addLog("Entering Shop...");
+      setShowShop(true);
+    }
+    
+    // Enemy check (Symbol Encounter)
+    if (cell === 'enemy') {
+      addLog("Enemy Encountered!");
+      startBattle();
+    }
+  };
+
+  const rotatePlayer = (delta: number) => {
+    setDirection(prev => (prev + delta + 4) % 4 as Direction);
+  };
+
   const handleCommand = (cmd: string) => {
     const lowerCmd = cmd.toLowerCase().trim();
-    if (lowerCmd === 'map') {
+    
+    // FPS Commands
+    if (['forward', 'f'].includes(lowerCmd)) {
+      const dx = [0, 1, 0, -1][direction];
+      const dy = [-1, 0, 1, 0][direction];
+      movePlayer(dx, dy);
+    } else if (['back', 'b'].includes(lowerCmd)) {
+      const dx = [0, 1, 0, -1][direction];
+      const dy = [-1, 0, 1, 0][direction];
+      movePlayer(-dx, -dy);
+    } else if (['turn_left', 'tl'].includes(lowerCmd)) {
+      rotatePlayer(3); // -1 equivalent
+    } else if (['turn_right', 'tr'].includes(lowerCmd)) {
+      rotatePlayer(1);
+    } else if (['strafe_left', 'sl'].includes(lowerCmd)) {
+      const dx = [-1, 0, 1, 0][direction];
+      const dy = [0, -1, 0, 1][direction];
+      movePlayer(dx, dy);
+    } else if (['strafe_right', 'sr'].includes(lowerCmd)) {
+      const dx = [1, 0, -1, 0][direction];
+      const dy = [0, 1, 0, -1][direction];
+      movePlayer(dx, dy);
+    } 
+    // Existing Commands
+    else if (lowerCmd === 'map') {
       addLog('Map updated.');
     } else if (lowerCmd.startsWith('name ')) {
       const newName = cmd.substring(5).trim();
@@ -218,73 +287,62 @@ function App() {
 
       if (!dungeon) return;
 
-      let newX = playerPos.x;
-      let newY = playerPos.y;
-      let newDir = direction;
-      let moved = false;
 
-      // Tank Controls
+
+      // Tank & FPS Controls
+      
+      // Rotate Left (or Strafe with Shift)
       if (e.key === 'ArrowLeft' || e.key === 'a') {
-        newDir = (direction + 3) % 4 as Direction; // Rotate Left
-        setDirection(newDir);
-        return;
-      }
-      if (e.key === 'ArrowRight' || e.key === 'd') {
-        newDir = (direction + 1) % 4 as Direction; // Rotate Right
-        setDirection(newDir);
-        return;
-      }
-
-      if (e.key === 'ArrowUp' || e.key === 'w') {
-        // Move Forward
-        const dx = [0, 1, 0, -1][direction];
-        const dy = [-1, 0, 1, 0][direction];
-        newX += dx;
-        newY += dy;
-        moved = true;
-      }
-      if (e.key === 'ArrowDown' || e.key === 's') {
-        // Move Backward
-        const dx = [0, 1, 0, -1][direction];
-        const dy = [-1, 0, 1, 0][direction];
-        newX -= dx;
-        newY -= dy;
-        moved = true;
-      }
-
-      if (!moved) return;
-
-      // Wall collision
-      if (
-        newX < 0 || newX >= dungeon.width ||
-        newY < 0 || newY >= dungeon.height ||
-        dungeon.grid[newY][newX] === 'wall'
-      ) {
-        addLog("Ouch! Hit a wall.");
-        return;
-      }
-
-      setPlayerPos({ x: newX, y: newY });
-      setVisited(prev => new Set(prev).add(`${newX},${newY}`));
-
-      const cell = dungeon.grid[newY][newX];
-
-      // Exit check
-      if (cell === 'exit') {
-        addLog("Found stairs! Descending...");
-        setTimeout(() => initDungeon(floor + 1), 500);
-      }
-
-      // Shop check
-      if (cell === 'shop') {
-        addLog("Entering Shop...");
-        setShowShop(true);
+        if (e.shiftKey) {
+           // Strafe Left
+           const dx = [-1, 0, 1, 0][direction];
+           const dy = [0, -1, 0, 1][direction];
+           movePlayer(dx, dy);
+           return;
+        } else {
+           rotatePlayer(3);
+           return;
+        }
       }
       
-        // Enemy check (Symbol Encounter)
-      if (cell === 'enemy') {
-        addLog("Enemy Encountered!");
-        startBattle();
+      // Rotate Right (or Strafe with Shift)
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+         if (e.shiftKey) {
+            // Strafe Right
+            const dx = [1, 0, -1, 0][direction];
+            const dy = [0, 1, 0, -1][direction];
+            movePlayer(dx, dy);
+            return;
+         } else {
+            rotatePlayer(1);
+            return;
+         }
+      }
+
+      // Forward
+      if (e.key === 'ArrowUp' || e.key === 'w') {
+        const dx = [0, 1, 0, -1][direction];
+        const dy = [-1, 0, 1, 0][direction];
+        movePlayer(dx, dy);
+      }
+      // Backward
+      if (e.key === 'ArrowDown' || e.key === 's') {
+        const dx = [0, 1, 0, -1][direction];
+        const dy = [-1, 0, 1, 0][direction];
+        movePlayer(-dx, -dy);
+      }
+      
+      // Strafe Left (Q)
+      if (e.key === 'q') {
+         const dx = [-1, 0, 1, 0][direction];
+         const dy = [0, -1, 0, 1][direction];
+         movePlayer(dx, dy);
+      }
+      // Strafe Right (E)
+      if (e.key === 'e') {
+         const dx = [1, 0, -1, 0][direction];
+         const dy = [0, 1, 0, -1][direction];
+         movePlayer(dx, dy);
       }
 
     };
@@ -495,9 +553,9 @@ function App() {
           <>
             <div className="flex-1 flex flex-col gap-4">
               {/* Main View Area */}
-              <div className="flex-1 flex items-center justify-center bg-black border border-terminal-darkGreen relative overflow-hidden min-h-[400px]">
+              <div className="flex-1 flex items-center justify-center bg-black border border-terminal-darkGreen relative overflow-hidden min-h-[500px]">
                 {gameState === 'dungeon' && dungeon && (
-                  <Dungeon3D map={dungeon} playerPos={playerPos} direction={direction} />
+                  <Dungeon3D map={dungeon} playerPos={playerPos} direction={direction} player={player} />
                 )}
                 
                 {gameState === 'battle' && battleState && (
@@ -509,33 +567,33 @@ function App() {
                     isPaused={showSystemMenu}
                   />
                 )}
-              </div>
 
-              {/* Command Prompt */}
-              <div className="flex items-center gap-2 border-t border-terminal-darkGreen pt-2">
-                <span className="text-terminal-green">users/{userName}&gt;</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleCommand(inputValue);
-                      setInputValue('');
-                    }
-                  }}
-                  className="flex-1 bg-transparent border-none outline-none text-terminal-green font-mono"
-                  placeholder="Type command..."
-                />
+                {/* Command Prompt Overlay */}
+                <div className="absolute bottom-0 left-0 w-full bg-black/80 border-t border-terminal-darkGreen p-2 flex items-center gap-2 z-20">
+                  <span className="text-terminal-green">users/{userName}&gt;</span>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCommand(inputValue);
+                        setInputValue('');
+                      }
+                    }}
+                    className="flex-1 bg-transparent border-none outline-none text-terminal-green font-mono"
+                    placeholder="Type command..."
+                  />
+                </div>
               </div>
             </div>
 
             {/* Sidebar */}
-            <div className="w-80 flex flex-col gap-4 h-full overflow-hidden">
+            <div className="w-80 flex flex-col gap-4 h-full overflow-hidden min-h-0">
               {/* Mini Map */}
               {gameState === 'dungeon' && dungeon && (
-                <div className="h-48 border border-terminal-darkGreen p-2 flex items-center justify-center bg-black">
+                <div className="h-auto border border-terminal-darkGreen p-2 flex items-center justify-center bg-black mt-1">
                    <Dungeon map={dungeon} playerPos={playerPos} visited={visited} direction={direction} />
                 </div>
               )}
@@ -552,7 +610,7 @@ function App() {
                 atk={player.atk}
               />
               
-              <div className="terminal-border p-4 flex-1 flex flex-col">
+              <div className="terminal-border p-4 flex-1 flex flex-col min-h-0">
                 <h3 className="border-b border-terminal-green mb-2">LOG</h3>
                 <div className="text-sm opacity-70 space-y-1 flex-1 overflow-y-auto scrollbar-thin flex flex-col-reverse">
                   {gameLog.slice().reverse().map((log, i) => (
