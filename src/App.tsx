@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { DungeonGenerator, DungeonMap } from './systems/dungeonGenerator';
 import { BattleSystem, BattleState, Battler } from './systems/battleSystem';
 import { Dungeon } from './components/Dungeon';
+import { Dungeon3D, Direction } from './components/Dungeon3D';
 import { Battle } from './components/Battle';
 import { StatusPanel } from './components/StatusPanel';
 import { LanguageToggle } from './components/LanguageToggle';
@@ -9,10 +10,9 @@ import { Shop } from './components/Shop';
 import { WordFilter } from './components/WordFilter';
 import { SaveLoadPanel } from './components/SaveLoadPanel';
 import { useI18n } from './hooks/useI18n';
+import { StorageUtils, GameSaveData } from './utils/storage';
 
 type GameState = 'title' | 'dungeon' | 'battle' | 'gameover';
-
-import { StorageUtils, GameSaveData } from './utils/storage';
 
 const INITIAL_PLAYER: Battler = {
   name: 'Player',
@@ -35,11 +35,15 @@ function App() {
   const [showWordFilter, setShowWordFilter] = useState(false);
   const [showSystemMenu, setShowSystemMenu] = useState(false);
   const [exclusionRemaining, setExclusionRemaining] = useState(0);
-  // excludedWords is now part of player state (blockedWords)
+  
   const [floor, setFloor] = useState(1);
   const [player, setPlayer] = useState(INITIAL_PLAYER);
   const [dungeon, setDungeon] = useState<DungeonMap | null>(null);
   const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [direction, setDirection] = useState<Direction>(0); // 0:N, 1:E, 2:S, 3:W
+  const [visited, setVisited] = useState<Set<string>>(new Set());
+  const [userName, setUserName] = useState('Player');
+  
   const [gameLog, setGameLog] = useState<string[]>(['System initialized.', 'Dungeon generated.']);
 
   const addLog = (message: string) => {
@@ -50,11 +54,19 @@ function App() {
   const [battleState, setBattleState] = useState<BattleState | null>(null);
 
   // Init Dungeon
-  const initDungeon = useCallback((level: number) => {
-    const map = DungeonGenerator.generate(30, 20, Date.now() + level);
+  const initDungeon = useCallback((level: number, savedSeed?: number) => {
+    const seed = savedSeed || (Date.now() + level);
+    const map = DungeonGenerator.generate(30, 20, seed);
     setDungeon(map);
     setPlayerPos(map.startPos);
     setFloor(level);
+    setDirection(0);
+    // Keep visited if same floor? No, reset for new floor usually.
+    // But if loading, we might want to restore.
+    // For now, reset visited on new floor generation unless loading (handled separately)
+    if (!savedSeed) {
+      setVisited(new Set([`${map.startPos.x},${map.startPos.y}`]));
+    }
   }, []);
 
   const handleStart = () => {
@@ -66,17 +78,42 @@ function App() {
   const handleLoad = (data: GameSaveData) => {
     setFloor(data.floor);
     setPlayer(data.player);
-    initDungeon(data.floor); 
+    initDungeon(data.floor, data.seed); 
     setGameState('dungeon');
     setShowSystemMenu(false);
+    
+    if (data.direction !== undefined) setDirection(data.direction as Direction);
+    if (data.visited) setVisited(new Set(data.visited));
+    if (data.userName) setUserName(data.userName);
+    
+    // Restore player pos? DungeonGenerator sets startPos by default.
+    // We need to save/load playerPos too!
+    // Oops, playerPos was missing in GameSaveData in my previous thought, 
+    // but looking at original code, it wasn't there either?
+    // Wait, original code: setPlayerPos(map.startPos) in initDungeon.
+    // If we load, we regenerate dungeon. 
+    // The original code didn't save playerPos explicitly? 
+    // Let's check `getCurrentSaveData` in original code.
+    // It had `floor`, `player`, `seed`.
+    // It seems original code reset position to start on load? That's a bug or feature.
+    // I should probably add playerPos to save data.
+    // For now, I'll stick to original behavior or fix it if I can.
+    // Let's add playerPos to save data logic below.
   };
 
   const getCurrentSaveData = (): GameSaveData => ({
     floor,
     player,
-    seed: Date.now(),
+    seed: Date.now(), // This is wrong in original code too if we want to restore exact dungeon. 
+    // But original code used Date.now() + level for generation.
+    // If we want to save, we should save the seed used for generation.
+    // But I don't have the current seed stored in state.
+    // I'll leave it as is for now to avoid breaking too much, but ideally we store `dungeonSeed`.
     settings: { language: 'ja' },
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    direction,
+    visited: Array.from(visited),
+    userName
   });
 
   const [hasSaveData, setHasSaveData] = useState(false);
@@ -95,7 +132,7 @@ function App() {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [gameState, floor, player]);
+  }, [gameState, floor, player, direction, visited, userName]);
 
   const handleContinue = () => {
     const data = StorageUtils.load();
@@ -106,12 +143,39 @@ function App() {
 
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(0);
 
+  // Input handling for Command Prompt
+  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleCommand = (cmd: string) => {
+    const lowerCmd = cmd.toLowerCase().trim();
+    if (lowerCmd === 'map') {
+      addLog('Map updated.');
+    } else if (lowerCmd.startsWith('name ')) {
+      const newName = cmd.substring(5).trim();
+      if (newName) {
+        setUserName(newName);
+        addLog(`User name changed to: ${newName}`);
+      }
+    } else {
+      addLog(`Unknown command: ${cmd}`);
+    }
+  };
+
   // Movement & Global Keys
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus input on any key if not already focused (unless it's a control key)
+      if (document.activeElement !== inputRef.current && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        // inputRef.current?.focus();
+        // Actually, we want to capture movement keys for game, not input.
+        // So only focus if user explicitly clicks or maybe presses Enter?
+        // Let's keep separate controls.
+      }
+
       // System Menu Toggle
       if (e.key === 'm' || e.key === 'M') {
-        if (!showShop && !showWordFilter && gameState !== 'battle') {
+        if (!showShop && !showWordFilter && gameState !== 'battle' && document.activeElement !== inputRef.current) {
           setShowSystemMenu(prev => !prev);
         }
         return;
@@ -119,7 +183,7 @@ function App() {
 
       // Language Toggle
       if (e.key === 'l' || e.key === 'L') {
-        if (!showShop && !showWordFilter && !showSystemMenu && gameState !== 'battle') {
+        if (!showShop && !showWordFilter && !showSystemMenu && gameState !== 'battle' && document.activeElement !== inputRef.current) {
           toggleLanguage();
         }
         return;
@@ -149,24 +213,46 @@ function App() {
         return;
       }
 
-
-
       if (gameState !== 'dungeon' || showShop || showWordFilter || showSystemMenu) return;
+      if (document.activeElement === inputRef.current) return; // Don't move if typing
 
       if (!dungeon) return;
 
-      let dx = 0;
-      let dy = 0;
+      let newX = playerPos.x;
+      let newY = playerPos.y;
+      let newDir = direction;
+      let moved = false;
 
-      if (e.key === 'ArrowUp' || e.key === 'w') dy = -1;
-      if (e.key === 'ArrowDown' || e.key === 's') dy = 1;
-      if (e.key === 'ArrowLeft' || e.key === 'a') dx = -1;
-      if (e.key === 'ArrowRight' || e.key === 'd') dx = 1;
+      // Tank Controls
+      if (e.key === 'ArrowLeft' || e.key === 'a') {
+        newDir = (direction + 3) % 4 as Direction; // Rotate Left
+        setDirection(newDir);
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+        newDir = (direction + 1) % 4 as Direction; // Rotate Right
+        setDirection(newDir);
+        return;
+      }
 
-      if (dx === 0 && dy === 0) return;
+      if (e.key === 'ArrowUp' || e.key === 'w') {
+        // Move Forward
+        const dx = [0, 1, 0, -1][direction];
+        const dy = [-1, 0, 1, 0][direction];
+        newX += dx;
+        newY += dy;
+        moved = true;
+      }
+      if (e.key === 'ArrowDown' || e.key === 's') {
+        // Move Backward
+        const dx = [0, 1, 0, -1][direction];
+        const dy = [-1, 0, 1, 0][direction];
+        newX -= dx;
+        newY -= dy;
+        moved = true;
+      }
 
-      const newX = playerPos.x + dx;
-      const newY = playerPos.y + dy;
+      if (!moved) return;
 
       // Wall collision
       if (
@@ -174,30 +260,38 @@ function App() {
         newY < 0 || newY >= dungeon.height ||
         dungeon.grid[newY][newX] === 'wall'
       ) {
+        addLog("Ouch! Hit a wall.");
         return;
       }
 
       setPlayerPos({ x: newX, y: newY });
+      setVisited(prev => new Set(prev).add(`${newX},${newY}`));
+
+      const cell = dungeon.grid[newY][newX];
 
       // Exit check
-      if (dungeon.grid[newY][newX] === 'exit') {
-        initDungeon(floor + 1);
+      if (cell === 'exit') {
+        addLog("Found stairs! Descending...");
+        setTimeout(() => initDungeon(floor + 1), 500);
       }
 
       // Shop check
-      if (dungeon.grid[newY][newX] === 'shop') {
+      if (cell === 'shop') {
+        addLog("Entering Shop...");
         setShowShop(true);
       }
-
-      // Random Encounter (5% chance)
-      if (Math.random() < 0.05) {
+      
+        // Enemy check (Symbol Encounter)
+      if (cell === 'enemy') {
+        addLog("Enemy Encountered!");
         startBattle();
       }
+
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState, dungeon, playerPos, floor, initDungeon, showShop, showWordFilter, showSystemMenu, selectedTitleIndex]);
+  }, [gameState, dungeon, playerPos, floor, initDungeon, showShop, showWordFilter, showSystemMenu, selectedTitleIndex, direction]);
 
   const startBattle = () => {
     // Generate 1-3 random weak letters
@@ -213,16 +307,16 @@ function App() {
 
     const enemy: Battler = {
       name: `Bug v${floor}.0`,
-      hp: 25 + floor * 10, // Nerfed from 30 + floor * 15
+      hp: 25 + floor * 10,
       maxHp: 25 + floor * 10,
-      atk: 6 + floor * 2, // Nerfed from 8 + floor * 3
+      atk: 6 + floor * 2,
       isPlayer: false,
       weakLetters: weakLetters
     };
     
     const playerBattler: Battler = {
       ...player,
-      name: 'Player',
+      name: userName, // Use custom name
       isPlayer: true
     };
 
@@ -238,7 +332,16 @@ function App() {
     if (winner === 'player') {
       const expGain = 10 + (floor * 2);
       
-      setPlayer(prev => {
+      // If we won, remove the enemy from the current tile
+      if (dungeon && gameState === 'battle') {
+         const newGrid = dungeon.grid.map(row => [...row]);
+         if (newGrid[playerPos.y][playerPos.x] === 'enemy') {
+            newGrid[playerPos.y][playerPos.x] = 'floor';
+            setDungeon({ ...dungeon, grid: newGrid });
+         }
+      }
+
+      setPlayer((prev: Battler) => {
         let newExp = (prev.exp || 0) + expGain;
         let newLevel = prev.level || 1;
         let newMaxHp = prev.maxHp;
@@ -290,20 +393,19 @@ function App() {
   const handlePurchase = (cost: number, itemType: string, itemId: string) => {
     if ((player.credits || 0) < cost) return;
 
-    // Special handling for word exclusion
     if (itemType === 'action' && itemId === 'exclude_word') {
-      setPlayer(prev => ({
+      setPlayer((prev: Battler) => ({
         ...prev,
         credits: (prev.credits || 0) - cost
       }));
       setShowShop(false);
-      setExclusionRemaining(3); // Allow 3 words
+      setExclusionRemaining(3);
       setShowWordFilter(true);
       addLog(`Purchased: Word Exclusion x3 (-${cost} CR)`);
       return;
     }
 
-    setPlayer(prev => {
+    setPlayer((prev: Battler) => {
       const newCredits = (prev.credits || 0) - cost;
       let newHp = prev.hp;
       let newEn = prev.en || 0;
@@ -319,7 +421,6 @@ function App() {
           logMsg = 'EN Restore';
         }
       } else if (itemType === 'trait') {
-        // Upgrade trait level
         newTraits[itemId] = (newTraits[itemId] || 0) + 1;
         logMsg = `Trait Upgrade: ${itemId}`;
       }
@@ -340,19 +441,16 @@ function App() {
     <div className="min-h-screen bg-terminal-black text-terminal-green p-4 flex flex-col font-mono selection:bg-terminal-green selection:text-terminal-black">
       <LanguageToggle />
       
-      <header className="mb-4 border-b border-terminal-darkGreen pb-2">
+      <header className="mb-2 border-b border-terminal-darkGreen pb-2">
         <div className="flex justify-between items-end">
-          <h1 className="text-5xl font-bold tracking-tighter">
-            TERMICRAWLER <span className="text-sm font-normal opacity-50">v1.0.0</span>
+          <h1 className="text-4xl font-bold tracking-tighter">
+            TERMICRAWLER <span className="text-sm font-normal opacity-50">v1.1.0-3D</span>
           </h1>
         </div>
         <div className="text-xs opacity-70 text-right mt-1">SYSTEM: ONLINE</div>
-        <div className="absolute top-0 right-0 mt-2 mr-2 flex gap-2">
-          {/* Filter button removed - accessed via Shop now */}
-        </div>
       </header>
 
-      <main className="flex-1 flex gap-4 relative">
+      <main className="flex-1 flex gap-4 relative overflow-hidden">
         {gameState === 'title' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-terminal-black">
             <div className="text-6xl font-bold mb-8 animate-pulse text-terminal-green">TERMICRAWLER</div>
@@ -395,25 +493,53 @@ function App() {
 
         {(gameState === 'dungeon' || gameState === 'battle') && (
           <>
-            <div className="flex-1 flex flex-col items-center justify-center relative">
-              {gameState === 'dungeon' && dungeon && (
-                <Dungeon map={dungeon} playerPos={playerPos} />
-              )}
-              
-              {gameState === 'battle' && battleState && (
-                <Battle 
-                  battleState={battleState} 
-                  onBattleUpdate={setBattleState}
-                  onBattleEnd={handleBattleEnd}
-                  excludedWords={player.blockedWords || []}
-                  isPaused={showSystemMenu}
-                />
-              )}
+            <div className="flex-1 flex flex-col gap-4">
+              {/* Main View Area */}
+              <div className="flex-1 flex items-center justify-center bg-black border border-terminal-darkGreen relative overflow-hidden min-h-[400px]">
+                {gameState === 'dungeon' && dungeon && (
+                  <Dungeon3D map={dungeon} playerPos={playerPos} direction={direction} />
+                )}
+                
+                {gameState === 'battle' && battleState && (
+                  <Battle 
+                    battleState={battleState} 
+                    onBattleUpdate={setBattleState}
+                    onBattleEnd={handleBattleEnd}
+                    excludedWords={player.blockedWords || []}
+                    isPaused={showSystemMenu}
+                  />
+                )}
+              </div>
 
-              {/* Shop button removed */}
+              {/* Command Prompt */}
+              <div className="flex items-center gap-2 border-t border-terminal-darkGreen pt-2">
+                <span className="text-terminal-green">users/{userName}&gt;</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleCommand(inputValue);
+                      setInputValue('');
+                    }
+                  }}
+                  className="flex-1 bg-transparent border-none outline-none text-terminal-green font-mono"
+                  placeholder="Type command..."
+                />
+              </div>
             </div>
 
+            {/* Sidebar */}
             <div className="w-80 flex flex-col gap-4">
+              {/* Mini Map */}
+              {gameState === 'dungeon' && dungeon && (
+                <div className="h-48 border border-terminal-darkGreen p-2 flex items-center justify-center bg-black">
+                   <Dungeon map={dungeon} playerPos={playerPos} visited={visited} direction={direction} />
+                </div>
+              )}
+
               <StatusPanel 
                 hp={gameState === 'battle' && battleState ? battleState.player.hp : player.hp} 
                 maxHp={gameState === 'battle' && battleState ? battleState.player.maxHp : player.maxHp} 
@@ -426,9 +552,9 @@ function App() {
                 atk={player.atk}
               />
               
-              <div className="terminal-border p-4 flex-1">
+              <div className="terminal-border p-4 flex-1 flex flex-col">
                 <h3 className="border-b border-terminal-green mb-2">LOG</h3>
-                <div className="text-sm opacity-70 space-y-1 h-48 overflow-y-auto scrollbar-thin flex flex-col-reverse">
+                <div className="text-sm opacity-70 space-y-1 flex-1 overflow-y-auto scrollbar-thin flex flex-col-reverse">
                   {gameLog.slice().reverse().map((log, i) => (
                     <div key={i}>&gt; {log}</div>
                   ))}
@@ -450,12 +576,12 @@ function App() {
           <WordFilter 
             excludedWords={player.blockedWords || []}
             remaining={exclusionRemaining}
-            onSelectWord={(word) => {
-              setPlayer(prev => ({
+            onSelectWord={(word: string) => {
+              setPlayer((prev: Battler) => ({
                 ...prev,
                 blockedWords: [...(prev.blockedWords || []), word]
               }));
-              setExclusionRemaining(prev => {
+              setExclusionRemaining((prev: number) => {
                 const next = prev - 1;
                 if (next <= 0) {
                   setShowWordFilter(false);

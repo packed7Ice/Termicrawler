@@ -1,14 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { DungeonMap } from '../systems/dungeonGenerator';
+import { Direction } from './Dungeon3D';
 
 interface DungeonProps {
   map: DungeonMap;
   playerPos: { x: number; y: number };
+  visited: Set<string>;
+  direction: Direction;
 }
 
-export const Dungeon: React.FC<DungeonProps> = ({ map, playerPos }) => {
+export const Dungeon = ({ map, playerPos, visited, direction }: DungeonProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const CELL_SIZE = 24;
+  const CELL_SIZE = 12; // Smaller for minimap
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,41 +21,73 @@ export const Dungeon: React.FC<DungeonProps> = ({ map, playerPos }) => {
     if (!ctx) return;
 
     // Clear
-    ctx.fillStyle = '#0c0c0c';
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw grid
     map.grid.forEach((row, y) => {
       row.forEach((cell, x) => {
-        if (cell === 'wall') return;
+        // Fog of War: Only draw if visited
+        if (!visited.has(`${x},${y}`)) return;
 
-        // Visibility check (Fog of War could be added here)
-        // For now, draw all floors
-        ctx.fillStyle = '#003300'; // Dark green for floor
+        if (cell === 'wall') {
+           ctx.fillStyle = '#333333';
+           ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+           return;
+        }
+
+        // Floor
+        ctx.fillStyle = '#003300'; 
         if (cell === 'start') ctx.fillStyle = '#005500';
         if (cell === 'exit') ctx.fillStyle = '#007700';
-        if (cell === 'shop') ctx.fillStyle = '#aaaa00'; // Yellowish for shop
-
+        if (cell === 'shop') ctx.fillStyle = '#aaaa00';
+        
         ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
 
         if (cell === 'shop') {
           ctx.fillStyle = '#ffff00';
-          ctx.font = '14px monospace';
+          ctx.font = '10px monospace';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText('S', x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2);
+          ctx.fillText('$', x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2);
+        }
+        
+        if (cell === 'exit') {
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('>', x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2);
         }
       });
     });
 
-    // Draw Player
-    ctx.fillStyle = '#0f0'; // Bright green
-    ctx.font = '16px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('@', playerPos.x * CELL_SIZE + CELL_SIZE / 2, playerPos.y * CELL_SIZE + CELL_SIZE / 2);
+    // Draw Player Arrow
+    const px = playerPos.x * CELL_SIZE + CELL_SIZE / 2;
+    const py = playerPos.y * CELL_SIZE + CELL_SIZE / 2;
+    
+    ctx.save();
+    ctx.translate(px, py);
+    // Rotate based on direction (0:N, 1:E, 2:S, 3:W)
+    // Canvas 0 is Right (East). So N is -90deg.
+    // Direction 0(N) -> -90 (-PI/2)
+    // Direction 1(E) -> 0
+    // Direction 2(S) -> 90 (PI/2)
+    // Direction 3(W) -> 180 (PI)
+    const rotation = (direction - 1) * (Math.PI / 2);
+    ctx.rotate(rotation);
+    
+    ctx.fillStyle = '#00ff00';
+    ctx.beginPath();
+    ctx.moveTo(6, 0);
+    ctx.lineTo(-4, -4);
+    ctx.lineTo(-4, 4);
+    ctx.closePath();
+    ctx.fill();
+    
+    ctx.restore();
 
-  }, [map, playerPos]);
+  }, [map, playerPos, visited, direction]);
 
   return (
     <div className="terminal-border inline-block">

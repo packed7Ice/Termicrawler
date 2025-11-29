@@ -1,4 +1,4 @@
-export type CellType = 'wall' | 'floor' | 'start' | 'exit' | 'shop';
+export type CellType = 'wall' | 'floor' | 'start' | 'exit' | 'shop' | 'enemy';
 
 export interface Position {
   x: number;
@@ -125,6 +125,22 @@ export const DungeonGenerator = {
         }
         attempts++;
       }
+    }
+
+    // Place Enemies
+    const enemyCount = Math.floor(rooms.length * 1.5); // Approx 1-2 enemies per room on average
+    let enemiesPlaced = 0;
+    let attempts = 0;
+    while (enemiesPlaced < enemyCount && attempts < 100) {
+      const r = rooms[random(0, rooms.length - 1)];
+      const rx = random(r.x, r.x + r.w - 1);
+      const ry = random(r.y, r.y + r.h - 1);
+
+      if (grid[ry][rx] === 'floor') {
+        grid[ry][rx] = 'enemy';
+        enemiesPlaced++;
+      }
+      attempts++;
     }
 
     return { width, height, grid, startPos, exitPos, rooms };

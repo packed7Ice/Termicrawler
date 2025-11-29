@@ -11,6 +11,10 @@ export interface GameSaveData {
     language: string;
   };
   timestamp: number;
+  // New fields for 3D update
+  direction?: number; // 0-3
+  visited?: string[]; // Array of "x,y" strings
+  userName?: string;
 }
 
 export const StorageUtils = {
